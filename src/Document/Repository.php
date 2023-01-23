@@ -2,6 +2,10 @@
 
 namespace Nadia\ElasticSearchODM\Document;
 
+use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
+use Psr\Cache\InvalidArgumentException;
+use ReflectionException;
+
 abstract class Repository
 {
     /**
@@ -17,5 +21,177 @@ abstract class Repository
     public function __construct(Manager $dm)
     {
         $this->dm = $dm;
+    }
+
+    /**
+     * @param string[] $indexNames
+     * @param string $indexTypeName
+     * @param array $criteria
+     * @param array $orderBy
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     */
+    public function findOneBy(array $indexNames, $indexTypeName, array $criteria, array $orderBy = [])
+    {
+        $result = $this->findBy($indexNames, $indexTypeName, $criteria, $orderBy, 1);
+
+        return isset($result[0]) ? $result[0] : [];
+    }
+
+    /**
+     * @param string[] $indexNames
+     * @param string $indexTypeName
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int $limit
+     *
+     * @return array
+     *
+     * @throws InvalidArgumentException
+     */
+    public function findBy(array $indexNames, $indexTypeName, array $criteria, array $orderBy = [], $limit = 10)
+    {
+        $indexNames = $this->dm->getClient()->getValidIndexNames($indexNames);
+
+        if (empty($indexNames)) {
+            return [];
+        }
+
+        $params = [
+            'index' => join(',', $indexNames),
+            'type' => $indexTypeName,
+            'size' => $limit,
+            'body' => [],
+        ];
+
+        foreach ($criteria as $columnName => $value) {
+            $clause = 'must';
+
+            if (isset($columnName[0]) && '!' === $columnName[0]) {
+                $clause = 'must_not';
+                $columnName = substr($columnName, 1);
+            }
+            if (empty($columnName)) {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $params['body']['query']['bool'][$clause][] = ['terms' => [$columnName => $value]];
+            } else {
+                $params['body']['query']['bool'][$clause][] = ['term' => [$columnName => $value]];
+            }
+        }
+
+        foreach ($orderBy as $columnName => $orientation) {
+            $orientation = strtoupper($orientation);
+
+            if ($orientation != 'ASC' && $orientation != 'DESC') {
+                throw new \InvalidArgumentException('Invalid order by orientation (column: "' . $columnName . '")');
+            }
+
+            $params['body']['sort'][$columnName] = ['order' => $orientation];
+        }
+
+        $result = $this->dm->getClient()->search($params);
+
+        return (empty($result['hits']['hits'])) ? [] : $result['hits']['hits'];
+    }
+
+    /**
+     * @param object $document
+     *
+     * @return array
+     *
+     * @throws ReflectionException
+     */
+    public function write($document)
+    {
+        $metadata = $this->dm->getClassMetadata(get_class($document));
+        $ref = $metadata->getReflectionClass();
+        $body = [];
+
+        foreach ($metadata->columnsObjectToElastic as $propertyName => $columnName) {
+            $body[$columnName] = $ref->getProperty($propertyName)->getValue($document);
+        }
+
+        $params = [
+            'index' => $metadata->getIndexName($document),
+            'type' => $metadata->indexTypeName,
+            'body' => $body,
+        ];
+
+        if ($routing = $metadata->getRouting($document)) {
+            $params['routing'] = $routing;
+        }
+
+        return $this->dm->getClient()->index($params);
+    }
+
+    /**
+     * @param object[] $documents
+     *
+     * @return array
+     *
+     * @throws ReflectionException
+     */
+    public function bulkWrite($documents)
+    {
+        if (empty($documents)) {
+            return [];
+        }
+
+        $groupedInfos = [];
+        $results = [];
+
+        foreach ($documents as $document) {
+            $metadata = $this->dm->getClassMetadata(get_class($document));
+            $groupedInfos[$metadata->getIndexName($document)][] = ['document' => $document, 'metadata' => $metadata];
+        }
+
+        foreach ($groupedInfos as $indexName => $infos) {
+            $body = [];
+
+            foreach ($infos as $info) {
+                /** @var ClassMetadata $metadata */
+                $metadata = $info['metadata'];
+                $ref = $metadata->getReflectionClass();
+                $data = [];
+
+                foreach ($metadata->columnsObjectToElastic as $propertyName => $columnName) {
+                    $data[$columnName] = $ref->getProperty($propertyName)->getValue($info['document']);
+                }
+
+                $body[] = ['index' => ['_index' => $indexName, '_type' => $metadata->indexTypeName]];
+                $body[] = $data;
+            }
+
+            $results[$indexName] = $this->dm->getClient()->bulk(
+                ['index' => $indexName, 'type' => $infos[0]['metadata']->indexTypeName, 'body' => $body]
+            );
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param string $documentClassName
+     *
+     * @return array
+     *
+     * @throws ReflectionException
+     */
+    public function updateTemplate($documentClassName)
+    {
+        $metadata = $this->dm->getClassMetadata($documentClassName);
+        $metadata->template['template'] = $metadata->indexNamePrefix . $metadata->template['template'];
+
+        $params = [
+            'name' => $metadata->templateName,
+            'body' => $metadata->template,
+        ];
+
+        return $this->dm->getClient()->indices()->putTemplate($params);
     }
 }
