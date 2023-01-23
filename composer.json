@@ -1,0 +1,24 @@
+{
+    "name": "nadialabs/elasticsearch-odm",
+    "description": "An Object Document Mapper (ODM) library for ElasticSearch",
+    "require": {
+        "php": ">=5.6||^7.0",
+        "doctrine/annotations": "~1.4.0||^1.5.0||^2.0",
+        "elasticsearch/elasticsearch": "5.*||6.*",
+        "psr/cache": "^1.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*",
+        "symfony/phpunit-bridge": "^3.4|^4.4|^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nadia\\ElasticSearchODM\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nadia\\ElasticSearchODM\\Tests\\": "tests/"
+        }
+    }
+}
