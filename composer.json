@@ -1,6 +1,15 @@
 {
     "name": "nadialabs/elasticsearch-odm",
     "description": "An Object Document Mapper (ODM) library for ElasticSearch",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["ElasticSearch", "Elastic", "ELK"],
+    "authors": [
+        {
+            "name": "LeoOnTheEarth",
+            "email": "leo.on.the.earth@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=5.6||^7.0",
         "doctrine/annotations": "~1.4.0||^1.5.0||^2.0",
