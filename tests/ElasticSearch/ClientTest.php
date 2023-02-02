@@ -89,6 +89,19 @@ class ClientTest extends TestCase
         $client3->setMockAliases($aliases);
 
         $this->assertEquals($validIndexNames, $client3->getValidIndexNames($indexNames));
+
+        /** @var Client $client4 */
+        $client4 = (new ClientBuilder())
+            ->setClientClassName(Client::class)
+            ->setCache(new Cache())
+            ->build();
+        $client4->setMockAliases($aliases);
+
+        $this->assertEquals(
+            $validIndexNames,
+            $client4->getValidIndexNames($indexNames),
+            'Test for no cache (aliases) is hit'
+        );
     }
 
     private function getMockAliases()
