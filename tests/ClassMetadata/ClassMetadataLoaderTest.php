@@ -21,6 +21,7 @@ class ClassMetadataLoaderTest extends TestCase
     public function testLoad()
     {
         foreach (['TestDocument1', 'TestDocument2'] as $documentName) {
+            /** @var ClassMetadataLoader $loader */
             list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, true));
 
             if (file_exists($cacheFilePath)) {
@@ -37,6 +38,16 @@ class ClassMetadataLoaderTest extends TestCase
             list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, true));
             $this->doTestLoad($loader, $documentName, $cacheFilePath, $cacheFileName);
             list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, false));
+            $this->doTestLoad($loader, $documentName, $cacheFilePath, $cacheFileName);
+
+            unlink($cacheFilePath);
+
+            list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, false));
+
+            $loader->enableUpdateCache();
+            $this->doTestLoad($loader, $documentName, $cacheFilePath, $cacheFileName);
+
+            $loader->disableUpdateCache();
             $this->doTestLoad($loader, $documentName, $cacheFilePath, $cacheFileName);
 
             unlink($cacheFilePath);

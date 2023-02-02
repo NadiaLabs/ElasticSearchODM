@@ -98,6 +98,30 @@ final class ClassMetadataLoader
         return $this->loaded[$className] = new ClassMetadata($metadata);
     }
 
+    /**
+     * Enable to update metadata cache
+     *
+     * @return $this
+     */
+    public function enableUpdateCache()
+    {
+        $this->updateCache = true;
+
+        return $this;
+    }
+
+    /**
+     * Disable to update metadata cache
+     *
+     * @return $this
+     */
+    public function disableUpdateCache()
+    {
+        $this->updateCache = false;
+
+        return $this;
+    }
+
     private function resolveClassMetadata(ReflectionClass $reflectionClass, array $classAnnotations, array &$metadata)
     {
         $mappings = [];
