@@ -11,17 +11,17 @@ class Manager
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var ClassMetadataLoader
      */
-    private $classMetadataLoader;
+    protected $classMetadataLoader;
 
     /**
      * @var Repository[]
      */
-    private $repositories = [];
+    protected $repositories = [];
 
     /**
      * Manager constructor.
