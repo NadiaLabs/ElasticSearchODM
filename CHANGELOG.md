@@ -4,6 +4,7 @@ CHANGELOG
 ## v0.1.2
 
 - Update property visibility for Manager class
+- Remove $client parameter's type declaration (for Manager class)
 
 ## v0.1.1
 

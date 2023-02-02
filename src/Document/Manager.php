@@ -29,7 +29,7 @@ class Manager
      * @param Client $client
      * @param ClassMetadataLoader $classMetadataLoader
      */
-    public function __construct(Client $client, ClassMetadataLoader $classMetadataLoader)
+    public function __construct($client, ClassMetadataLoader $classMetadataLoader)
     {
         $this->client = $client;
         $this->classMetadataLoader = $classMetadataLoader;
