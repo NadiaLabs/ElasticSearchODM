@@ -303,7 +303,7 @@ class RepositoryTest extends TestCase
         $metadata = require __DIR__ . '/../Fixtures/cache/' . $metadataFilename;
         $metadata['template']['template'] = $metadata['indexNamePrefix'] . $metadata['template']['template'];
         $updateResult = ['acknowledged' => true];
-        $updateParams = ['name' => 'testing-template-name', 'body' => $metadata['template']];
+        $updateParams = ['name' => 'dev-testing-template-name', 'body' => $metadata['template']];
         $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
             ->disableOriginalConstructor()
             ->setMethods(['putTemplate'])

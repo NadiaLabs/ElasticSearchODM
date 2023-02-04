@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.4
+
+- Add template name prefix with env name
+
 ## v0.1.3
 
 - Add Number and Text annotations
