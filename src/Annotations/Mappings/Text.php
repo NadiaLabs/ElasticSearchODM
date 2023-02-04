@@ -8,15 +8,19 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  * @Annotation
  * @Target({"ANNOTATION"})
  */
-final class Keyword
+final class Text
 {
-    public $boost = 1.0;
+    public $analyzer;
 
-    public $doc_values = true;
+    public $boost = 1.0;
 
     public $eager_global_ordinals = false;
 
-    public $ignore_above = 2147483647;
+    public $fielddata = false;
+
+    public $fielddata_frequency_filter;
+
+    public $fields;
 
     public $include_in_all = false;
 
@@ -25,16 +29,25 @@ final class Keyword
     /**
      * @Enum({"docs", "freqs", "potitions", "offsets"})
      */
-    public $index_options = 'docs';
+    public $index_options = 'positions';
 
-    public $norms = false;
+    public $norms = true;
 
-    public $null_value;
+    public $position_increment_gap = 100;
 
     public $store = false;
+
+    public $search_analyzer;
+
+    public $search_quote_analyzer;
 
     /**
      * @Enum({"BM25", "classic", "boolean"})
      */
     public $similarity = 'BM25';
+
+    /**
+     * @Enum({"no", "yes", "with_positions", "with_offsets", "with_positions_offsets"})
+     */
+    public $term_vector = 'no';
 }

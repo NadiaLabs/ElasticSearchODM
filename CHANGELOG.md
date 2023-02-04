@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.3
+
+- Add Number and Text annotations
+
 ## v0.1.2
 
 - Update property visibility for Manager class
