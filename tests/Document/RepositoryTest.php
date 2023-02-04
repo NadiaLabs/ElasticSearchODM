@@ -294,35 +294,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /**
-     * @throws \ReflectionException
-     */
-    public function testUpdateTemplate()
-    {
-        $metadataFilename = 'Nadia-ElasticSearchODM-Tests-Stubs-Document-TestDocument1.dev.php';
-        $metadata = require __DIR__ . '/../Fixtures/cache/' . $metadataFilename;
-        $metadata['template']['template'] = $metadata['indexNamePrefix'] . $metadata['template']['template'];
-        $updateResult = ['acknowledged' => true];
-        $updateParams = ['name' => 'dev-testing-template-name', 'body' => $metadata['template']];
-        $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['putTemplate'])
-            ->getMock();
-        $client = $this->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['indices'])
-            ->getMock();
-
-        $indicesNamespace->method('putTemplate')->willReturn($updateResult);
-        $indicesNamespace->expects($this->once())->method('putTemplate')->with($updateParams);
-        $client->method('indices')->willReturn($indicesNamespace);
-
-        $repo = new TestDocumentRepository($this->createManager($client));
-        $result = $repo->updateTemplate(TestDocument1::class);
-
-        $this->assertEquals($updateResult, $result);
-    }
-
     private function createManager($client)
     {
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');

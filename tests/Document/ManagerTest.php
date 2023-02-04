@@ -12,6 +12,7 @@ use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument4;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument5;
 use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\Client;
+use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\IndicesNamespace;
 use PHPUnit\Framework\TestCase;
 
 class ManagerTest extends TestCase
@@ -58,6 +59,35 @@ class ManagerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->createManager()->getRepository(TestDocument5::class);
+    }
+
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testUpdateTemplate()
+    {
+        $metadataFilename = 'Nadia-ElasticSearchODM-Tests-Stubs-Document-TestDocument1.dev.php';
+        $metadata = require __DIR__ . '/../Fixtures/cache/' . $metadataFilename;
+        $metadata['template']['template'] = $metadata['indexNamePrefix'] . $metadata['template']['template'];
+        $updateResult = ['acknowledged' => true];
+        $updateParams = ['name' => 'dev-testing-template-name', 'body' => $metadata['template']];
+        $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['putTemplate'])
+            ->getMock();
+        $client = $this->getMockBuilder(\Nadia\ElasticSearchODM\ElasticSearch\Client::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['indices'])
+            ->getMock();
+
+        $indicesNamespace->method('putTemplate')->willReturn($updateResult);
+        $indicesNamespace->expects($this->once())->method('putTemplate')->with($updateParams);
+        $client->method('indices')->willReturn($indicesNamespace);
+
+        $result = $this->createManager($client)->updateTemplate(TestDocument1::class);
+
+        $this->assertEquals($updateResult, $result);
     }
 
     private function createManager($client = null)

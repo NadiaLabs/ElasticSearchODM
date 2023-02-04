@@ -66,6 +66,26 @@ class Manager
     /**
      * @param string $documentClassName
      *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function updateTemplate($documentClassName)
+    {
+        $metadata = $this->getClassMetadata($documentClassName);
+        $metadata->template['template'] = $metadata->indexNamePrefix . $metadata->template['template'];
+
+        $params = [
+            'name' => $metadata->templateName,
+            'body' => $metadata->template,
+        ];
+
+        return $this->getClient()->indices()->putTemplate($params);
+    }
+
+    /**
+     * @param string $documentClassName
+     *
      * @return ClassMetadata
      *
      * @throws \ReflectionException

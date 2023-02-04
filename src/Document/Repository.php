@@ -174,24 +174,4 @@ abstract class Repository
 
         return $results;
     }
-
-    /**
-     * @param string $documentClassName
-     *
-     * @return array
-     *
-     * @throws ReflectionException
-     */
-    public function updateTemplate($documentClassName)
-    {
-        $metadata = $this->dm->getClassMetadata($documentClassName);
-        $metadata->template['template'] = $metadata->indexNamePrefix . $metadata->template['template'];
-
-        $params = [
-            'name' => $metadata->templateName,
-            'body' => $metadata->template,
-        ];
-
-        return $this->dm->getClient()->indices()->putTemplate($params);
-    }
 }
