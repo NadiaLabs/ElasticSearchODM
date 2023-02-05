@@ -5,7 +5,7 @@
   'routing' => null,
   'indexTypeName' => 'log',
   'repositoryClassName' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
-  'templateName' => 'dev-testing-template-name',
+  'templateName' => 'testing-template-name',
   'template' => 
   array (
     'template' => 'idx-testing-*',

@@ -5,6 +5,7 @@ namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
+use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument6;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataLoaderTest extends TestCase
@@ -20,7 +21,7 @@ class ClassMetadataLoaderTest extends TestCase
 
     public function testLoad()
     {
-        foreach (['TestDocument1', 'TestDocument2'] as $documentName) {
+        foreach (['TestDocument1', 'TestDocument2', 'TestDocument6'] as $documentName) {
             /** @var ClassMetadataLoader $loader */
             list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, true));
 

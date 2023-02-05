@@ -146,7 +146,15 @@ final class ClassMetadataLoader
                 $metadata['repositoryClassName'] = $annotation->repository_class_name;
                 $missingRequiredAnnotations['Document'] = false;
             } elseif ($annotation instanceof ES\Template) {
-                $metadata['templateName'] = $this->env . '-' . $annotation->name;
+                if (false !== strpos($annotation->name, '%s')) {
+                    $metadata['templateName'] = vsprintf(
+                        $annotation->name,
+                        array_fill(0, substr_count($annotation->name, '%s'), $this->env)
+                    );
+                } else {
+                    $metadata['templateName'] = $annotation->name;
+                }
+
                 $metadata['template'] = [
                     'template' => $annotation->index_name_pattern,
                     'settings' => [],
