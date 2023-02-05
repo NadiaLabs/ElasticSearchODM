@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+## v0.1.5
+
+- Move "updateTemplate" method from Repository to Manager
+- Support fixed/dynamic template name
+  
+  Dynamic template name can add env name by replacing with `%s` string
+
 ## v0.1.4
 
 - Add template name prefix with env name
