@@ -169,6 +169,10 @@ final class ClassMetadataLoader
                     }
                 }
 
+                if (empty($metadata['template']['settings'])) {
+                    unset($metadata['template']['settings']);
+                }
+
                 foreach ($annotation->mappingMetaFields as $metaField) {
                     $metaFieldClassName = get_class($metaField);
                     $metaFieldName = array_slice(explode('\\', $metaFieldClassName), -1)[0];

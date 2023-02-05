@@ -18,7 +18,6 @@ use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
  *     index_name_pattern="idx-testing-*",
  *     settings={
  *       "prod": @ES\TemplateSettings(number_of_shards="5", refresh_interval="30s"),
- *       "dev": @ES\TemplateSettings(number_of_shards="5"),
  *     },
  * )
  */

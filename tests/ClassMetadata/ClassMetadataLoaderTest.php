@@ -5,7 +5,6 @@ namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument6;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataLoaderTest extends TestCase

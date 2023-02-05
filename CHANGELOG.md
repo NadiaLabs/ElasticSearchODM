@@ -4,6 +4,7 @@ CHANGELOG
 ## v0.1.6
 
 - Fix invalid template pattern
+- Fix update template parameters when settings is empty
 
 ## v0.1.5
 

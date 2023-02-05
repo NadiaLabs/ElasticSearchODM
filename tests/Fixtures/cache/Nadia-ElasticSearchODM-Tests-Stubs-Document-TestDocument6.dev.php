@@ -9,11 +9,7 @@
   'template' => 
   array (
     'template' => 'idx-testing-*',
-    'settings' => 
-    array (
-      'number_of_shards' => '5',
-    ),
-    'mappings' => 
+    'mappings' =>
     array (
       'log' => 
       array (
