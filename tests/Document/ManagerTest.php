@@ -82,11 +82,16 @@ class ManagerTest extends TestCase
             ->getMock();
 
         $indicesNamespace->method('putTemplate')->willReturn($updateResult);
-        $indicesNamespace->expects($this->once())->method('putTemplate')->with($updateParams);
+        $indicesNamespace->expects($this->exactly(2))->method('putTemplate')->with($updateParams);
         $client->method('indices')->willReturn($indicesNamespace);
 
-        $result = $this->createManager($client)->updateTemplate(TestDocument1::class);
+        $manager = $this->createManager($client);
 
+        $result = $manager->updateTemplate(TestDocument1::class);
+        $this->assertEquals($updateResult, $result);
+
+        // Make sure "updateTemplate" result is the same with the first one
+        $result = $manager->updateTemplate(TestDocument1::class);
         $this->assertEquals($updateResult, $result);
     }
 

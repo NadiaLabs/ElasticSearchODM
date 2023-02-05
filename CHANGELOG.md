@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.6
+
+- Fix invalid template pattern
+
 ## v0.1.5
 
 - Move "updateTemplate" method from Repository to Manager

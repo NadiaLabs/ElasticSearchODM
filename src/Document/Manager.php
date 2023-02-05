@@ -73,11 +73,12 @@ class Manager
     public function updateTemplate($documentClassName)
     {
         $metadata = $this->getClassMetadata($documentClassName);
-        $metadata->template['template'] = $metadata->indexNamePrefix . $metadata->template['template'];
+        $template = $metadata->template;
+        $template['template'] = $metadata->indexNamePrefix . $template['template'];
 
         $params = [
             'name' => $metadata->templateName,
-            'body' => $metadata->template,
+            'body' => $template,
         ];
 
         return $this->getClient()->indices()->putTemplate($params);
