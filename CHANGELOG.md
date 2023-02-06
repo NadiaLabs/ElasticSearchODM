@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.8
+
+- Allow wildcard in index names
+
 ## v0.1.7
 
 - Fix bug when accessing non-public property values

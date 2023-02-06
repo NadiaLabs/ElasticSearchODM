@@ -95,6 +95,42 @@ class RepositoryTest extends TestCase
     /**
      * @throws InvalidArgumentException
      */
+    public function testFindByWithWildCardIndexName()
+    {
+        $indexes = ['dev-index-*'];
+        $expectedSearchResults = [
+            [
+                '_index' => 'dev-index-1',
+                '_type' => 'log',
+                '_id' => '1',
+                '_routing' => 'id:2023-01-23-0001',
+                '_source' => [
+                    'id' => '2023-01-23-0001',
+                    'created_at' => '2023-01-23',
+                ],
+            ],
+        ];
+        $expectedSearchBody = [
+            'query' => ['bool' => ['must' => [['term' => ['id' => '2023-01-23-0001']]]]],
+            'sort' => ['created_at' => ['order' => 'DESC']],
+        ];
+        $limit = 5;
+        $client = $this->createFindByClient($indexes, $expectedSearchResults, $expectedSearchBody, $limit);
+        $repo = new TestDocumentRepository($this->createManager($client));
+        $result = $repo->findBy(
+            $indexes,
+            'log',
+            ['id' => '2023-01-23-0001', '' => ''],
+            ['created_at' => 'DESC'],
+            $limit
+        );
+
+        $this->assertEquals($expectedSearchResults, $result);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
     public function testFindByForEmptyIndexes()
     {
         $client = $this->createFindByClient([], [], [], 6);

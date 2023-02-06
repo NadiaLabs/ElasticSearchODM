@@ -73,7 +73,7 @@ class Client extends \Elasticsearch\Client
         foreach ($indexNames as $indexName) {
             $indexName = $this->indexNamePrefix . $indexName;
 
-            if (isset($this->aliases[$indexName])) {
+            if (false !== strpos($indexName, '*') || isset($this->aliases[$indexName])) {
                 $validIndexNames[] = $indexName;
             }
         }
