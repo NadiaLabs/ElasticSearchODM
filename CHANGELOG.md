@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.7
+
+- Fix bug when accessing non-public property values
+
 ## v0.1.6
 
 - Fix invalid template pattern

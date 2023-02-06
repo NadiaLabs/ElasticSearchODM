@@ -113,7 +113,10 @@ abstract class Repository
         $body = [];
 
         foreach ($metadata->columnsObjectToElastic as $propertyName => $columnName) {
-            $body[$columnName] = $ref->getProperty($propertyName)->getValue($document);
+            $property = $ref->getProperty($propertyName);
+            $property->setAccessible(true);
+
+            $body[$columnName] = $property->getValue($document);
         }
 
         $params = [
@@ -160,7 +163,10 @@ abstract class Repository
                 $data = [];
 
                 foreach ($metadata->columnsObjectToElastic as $propertyName => $columnName) {
-                    $data[$columnName] = $ref->getProperty($propertyName)->getValue($info['document']);
+                    $property = $ref->getProperty($propertyName);
+                    $property->setAccessible(true);
+
+                    $data[$columnName] = $property->getValue($info['document']);
                 }
 
                 $body[] = ['index' => ['_index' => $indexName, '_type' => $metadata->indexTypeName]];
