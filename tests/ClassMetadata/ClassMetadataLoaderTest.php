@@ -4,6 +4,7 @@ namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
+use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument8;
@@ -56,9 +57,9 @@ class ClassMetadataLoaderTest extends TestCase
         }
     }
 
-    public function testLoadInvalidAnnotation()
+    public function testLoadInvalidAnnotation1()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(MissingRequiredAnnotationException::class);
 
         list($loader) = array_values($this->createLoader('TestDocument3', true));
 

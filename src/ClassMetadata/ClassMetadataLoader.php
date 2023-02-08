@@ -7,6 +7,7 @@ use Nadia\ElasticSearchODM\Annotations as ES;
 use Nadia\ElasticSearchODM\Document\DynamicIndexNameDocument;
 use Nadia\ElasticSearchODM\Document\RoutingEnabledDocument;
 use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
+use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -198,7 +199,7 @@ final class ClassMetadataLoader
 
         foreach ($missingRequiredAnnotations as $name => $isMissing) {
             if ($isMissing) {
-                throw new \InvalidArgumentException('Required annotation @' . $name . ' is missing');
+                throw new MissingRequiredAnnotationException('Required annotation @' . $name . ' is missing');
             }
         }
 
