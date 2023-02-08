@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.9
+
+- Add "Object" mapping annotation and refactor the process of resolving "@ES\Column" property
+
 ## v0.1.8
 
 - Allow wildcard in index names
