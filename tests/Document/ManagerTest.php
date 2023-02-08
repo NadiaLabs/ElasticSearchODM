@@ -17,7 +17,10 @@ use PHPUnit\Framework\TestCase;
 
 class ManagerTest extends TestCase
 {
-    protected function setUp()
+    /**
+     * @before
+     */
+    public function beforeTest()
     {
         $cacheDir = $this->getCacheDir();
 

@@ -7,13 +7,15 @@ use Nadia\ElasticSearchODM\Document\Manager;
 use Nadia\ElasticSearchODM\ElasticSearch\Client;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
-use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\IndicesNamespace;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\InvalidArgumentException;
 
 class RepositoryTest extends TestCase
 {
-    protected function setUp()
+    /**
+     * @before
+     */
+    public function beforeTest()
     {
         $cacheDir = $this->getCacheDir();
 

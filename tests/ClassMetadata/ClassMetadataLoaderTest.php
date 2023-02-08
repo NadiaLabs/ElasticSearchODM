@@ -12,7 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 class ClassMetadataLoaderTest extends TestCase
 {
-    protected function setUp()
+    /**
+     * @before
+     */
+    public function beforeTest()
     {
         $cacheDir = $this->getCacheDir();
 
