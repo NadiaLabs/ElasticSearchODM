@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Nadia\ElasticSearchODM\Annotations as ES;
 use Nadia\ElasticSearchODM\Document\DynamicIndexNameDocument;
 use Nadia\ElasticSearchODM\Document\RoutingEnabledDocument;
+use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -237,7 +238,7 @@ final class ClassMetadataLoader
         if ($annotation->mapping instanceof ES\Mappings\Object) {
             foreach ($annotation->mapping->properties as $propertyAnnotation) {
                 if (empty($propertyAnnotation->name)) {
-                    throw new \InvalidArgumentException(
+                    throw new InvalidAnnotationParameterException(
                         sprintf('The %s annotation requires a "name" parameter', $className)
                     );
                 }

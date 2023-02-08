@@ -3,8 +3,10 @@
 namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
+use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument8;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataLoaderTest extends TestCase
@@ -20,7 +22,7 @@ class ClassMetadataLoaderTest extends TestCase
 
     public function testLoad()
     {
-        foreach (['TestDocument1', 'TestDocument2', 'TestDocument6'] as $documentName) {
+        foreach (['TestDocument1', 'TestDocument2', 'TestDocument6', 'TestDocument7'] as $documentName) {
             /** @var ClassMetadataLoader $loader */
             list($loader, $cacheFileName, $cacheFilePath) = array_values($this->createLoader($documentName, true));
 
@@ -61,6 +63,15 @@ class ClassMetadataLoaderTest extends TestCase
         list($loader) = array_values($this->createLoader('TestDocument3', true));
 
         $loader->load(TestDocument3::class);
+    }
+
+    public function testLoadInvalidAnnotation2()
+    {
+        $this->expectException(InvalidAnnotationParameterException::class);
+
+        list($loader) = array_values($this->createLoader('TestDocument8', true));
+
+        $loader->load(TestDocument8::class);
     }
 
     public function testLoadWhenFileVersionChanged()
