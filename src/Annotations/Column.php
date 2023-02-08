@@ -4,7 +4,7 @@ namespace Nadia\ElasticSearchODM\Annotations;
 
 /**
  * @Annotation
- * @Target({"PROPERTY"})
+ * @Target({"PROPERTY", "ANNOTATION"})
  */
 final class Column
 {

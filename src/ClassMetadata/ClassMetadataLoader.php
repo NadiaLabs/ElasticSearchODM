@@ -218,20 +218,8 @@ final class ClassMetadataLoader
 
         foreach ($propertyAnnotations as $annotation) {
             if ($annotation instanceof ES\Column) {
-                $className = get_class($annotation->mapping);
-                $mappingType = array_slice(explode('\\', $className), -1)[0];
-                $mappingType = $this->convertCamelToSnake($mappingType);
-                $default = new $className();
-                $property = ['type' => $mappingType];
                 $elasticColumnName = empty($annotation->name) ? $propertyName : $annotation->name;
-
-                foreach (get_object_vars($default) as $name => $defaultValue) {
-                    if ($defaultValue !== $annotation->mapping->{$name}) {
-                        $property[$name] = $annotation->mapping->{$name};
-                    }
-                }
-
-                $properties[$elasticColumnName] = $property;
+                $properties[$elasticColumnName] = $this->resolvePropertyColumn($annotation);
                 $metadata['columnsElasticToObject'][$elasticColumnName] = $propertyName;
                 $metadata['columnsObjectToElastic'][$propertyName] = $elasticColumnName;
             } elseif ($annotation instanceof ES\Id) {
@@ -239,6 +227,37 @@ final class ClassMetadataLoader
                 $metadata['metaColumnsObjectToElastic'][$propertyName] = '_id';
             }
         }
+    }
+
+    private function resolvePropertyColumn(ES\Column $annotation)
+    {
+        $return = [];
+        $className = get_class($annotation->mapping);
+
+        if ($annotation->mapping instanceof ES\Mappings\Object) {
+            foreach ($annotation->mapping->properties as $propertyAnnotation) {
+                if (empty($propertyAnnotation->name)) {
+                    throw new \InvalidArgumentException(
+                        sprintf('The %s annotation requires a "name" parameter', $className)
+                    );
+                }
+
+                $return[$propertyAnnotation->name] = $this->resolvePropertyColumn($propertyAnnotation);
+            }
+        } else {
+            $mappingType = array_slice(explode('\\', $className), -1)[0];
+            $mappingType = $this->convertCamelToSnake($mappingType);
+
+            $return['type'] = $mappingType;
+
+            foreach (get_object_vars(new $className()) as $name => $defaultValue) {
+                if ($defaultValue !== $annotation->mapping->{$name}) {
+                    $return[$name] = $annotation->mapping->{$name};
+                }
+            }
+        }
+
+        return $return;
     }
 
     private function convertCamelToSnake($string)
