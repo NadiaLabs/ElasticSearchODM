@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## v0.1.10
+
+- Rename mapping Object to ESObject
+- Fix PHP version compatibility
+
 ## v0.1.9
 
 - Add "Object" mapping annotation and refactor the process of resolving "@ES\Column" property
