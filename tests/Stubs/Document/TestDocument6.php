@@ -40,7 +40,7 @@ class TestDocument6
     public $createdAt;
 
     /**
-     * TestDocument1 constructor.
+     * TestDocument6 constructor.
      *
      * @param string $id
      * @param string $createdAt
