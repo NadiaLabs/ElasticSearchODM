@@ -34,7 +34,7 @@ class TestDocument8
     /**
      * @var array
      *
-     * @ES\Column(mapping=@ES\Mappings\Object(
+     * @ES\Column(mapping=@ES\Mappings\ESObject(
      *   properties={
      *     @ES\Column(mapping=@ES\Mappings\Keyword()),
      *   }

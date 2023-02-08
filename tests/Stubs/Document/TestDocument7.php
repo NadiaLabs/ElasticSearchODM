@@ -32,12 +32,12 @@ class TestDocument7
     /**
      * @var array
      *
-     * @ES\Column(mapping=@ES\Mappings\Object(
+     * @ES\Column(mapping=@ES\Mappings\ESObject(
      *   properties={
      *     @ES\Column(name="foo", mapping=@ES\Mappings\Keyword()),
      *     @ES\Column(name="bar", mapping=@ES\Mappings\Keyword()),
      *     @ES\Column(name="foobar", mapping=@ES\Mappings\Keyword()),
-     *     @ES\Column(name="baz", mapping=@ES\Mappings\Object(
+     *     @ES\Column(name="baz", mapping=@ES\Mappings\ESObject(
      *       properties={
      *         @ES\Column(name="foo", mapping=@ES\Mappings\Keyword()),
      *         @ES\Column(name="bar", mapping=@ES\Mappings\Keyword()),

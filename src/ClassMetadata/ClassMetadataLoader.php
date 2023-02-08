@@ -236,7 +236,7 @@ final class ClassMetadataLoader
         $return = [];
         $className = get_class($annotation->mapping);
 
-        if ($annotation->mapping instanceof ES\Mappings\Object) {
+        if ($annotation->mapping instanceof ES\Mappings\ESObject) {
             foreach ($annotation->mapping->properties as $propertyAnnotation) {
                 if (empty($propertyAnnotation->name)) {
                     throw new InvalidAnnotationParameterException(
