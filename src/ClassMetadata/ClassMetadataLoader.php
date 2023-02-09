@@ -244,7 +244,7 @@ final class ClassMetadataLoader
                     );
                 }
 
-                $return[$propertyAnnotation->name] = $this->resolvePropertyColumn($propertyAnnotation);
+                $return['properties'][$propertyAnnotation->name] = $this->resolvePropertyColumn($propertyAnnotation);
             }
         } else {
             $mappingType = array_slice(explode('\\', $className), -1)[0];

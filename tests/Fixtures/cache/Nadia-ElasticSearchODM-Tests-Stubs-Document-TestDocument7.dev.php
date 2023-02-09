@@ -19,33 +19,39 @@
           array (
             'type' => 'keyword',
           ),
-          'diff' => 
-          array (
-            'foo' => 
+          'diff' =>
+          array(
+            'properties' =>
             array (
-              'type' => 'keyword',
-            ),
-            'bar' => 
-            array (
-              'type' => 'keyword',
-            ),
-            'foobar' => 
-            array (
-              'type' => 'keyword',
-            ),
-            'baz' => 
-            array (
-              'foo' => 
+              'foo' =>
               array (
                 'type' => 'keyword',
               ),
-              'bar' => 
+              'bar' =>
               array (
                 'type' => 'keyword',
               ),
-              'foobar' => 
+              'foobar' =>
               array (
                 'type' => 'keyword',
+              ),
+              'baz' =>
+              array (
+                'properties' =>
+                array(
+                  'foo' =>
+                  array (
+                    'type' => 'keyword',
+                  ),
+                  'bar' =>
+                  array (
+                    'type' => 'keyword',
+                  ),
+                  'foobar' =>
+                  array (
+                    'type' => 'keyword',
+                  ),
+                ),
               ),
             ),
           ),

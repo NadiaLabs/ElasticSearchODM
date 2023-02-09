@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.11
+
+- Fix missing "properties" in ESObject mapping
+
 ## v0.1.10
 
 - Rename mapping Object to ESObject
