@@ -2,9 +2,11 @@
 
 namespace Nadia\ElasticSearchODM\Document;
 
+use Elasticsearch\Client;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
-use Nadia\ElasticSearchODM\ElasticSearch\Client;
+use Nadia\ElasticSearchODM\Exception\RepositoryInheritanceInvalidException;
+use Nadia\ElasticSearchODM\Exception\RepositoryNotExistsException;
 use Psr\Cache\CacheItemPoolInterface;
 
 class Manager
@@ -71,10 +73,11 @@ class Manager
         $repoClassName = $metadata->repositoryClassName;
 
         if (!class_exists($repoClassName)) {
-            throw new \InvalidArgumentException('The document repository "' . $repoClassName . '" is not exists!');
+            throw new RepositoryNotExistsException('The document repository "' . $repoClassName . '" is not exists!');
         }
+
         if (!is_subclass_of($repoClassName, Repository::class)) {
-            throw new \InvalidArgumentException(
+            throw new RepositoryInheritanceInvalidException(
                 'The document repository "' . $repoClassName . '" should extend "' . Repository::class . '"!'
             );
         }

@@ -3,6 +3,7 @@
 namespace Nadia\ElasticSearchODM\Document;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
+use Nadia\ElasticSearchODM\Exception\InvalidOrderByOrientationException;
 use Psr\Cache\InvalidArgumentException;
 use ReflectionException;
 
@@ -53,7 +54,7 @@ abstract class Repository
      */
     public function findBy(array $indexNames, $indexTypeName, array $criteria, array $orderBy = [], $limit = 10)
     {
-        $indexNames = $this->dm->getClient()->getValidIndexNames($indexNames);
+        $indexNames = $this->dm->getValidIndexNames($indexNames);
 
         if (empty($indexNames)) {
             return [];
@@ -88,7 +89,9 @@ abstract class Repository
             $orientation = strtoupper($orientation);
 
             if ($orientation != 'ASC' && $orientation != 'DESC') {
-                throw new \InvalidArgumentException('Invalid order by orientation (column: "' . $columnName . '")');
+                throw new InvalidOrderByOrientationException(
+                    'Invalid order by orientation (column: "' . $columnName . '"), only allow "ASC" and "DESC"'
+                );
             }
 
             $params['body']['sort'][$columnName] = ['order' => $orientation];

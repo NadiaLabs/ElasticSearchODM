@@ -2,16 +2,18 @@
 
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
+use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Document\Manager;
-use Nadia\ElasticSearchODM\ElasticSearch\ClientBuilder;
+use Nadia\ElasticSearchODM\Exception\RepositoryInheritanceInvalidException;
+use Nadia\ElasticSearchODM\Exception\RepositoryNotExistsException;
 use Nadia\ElasticSearchODM\Tests\Stubs\Cache\Cache;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument4;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument5;
-use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\Client;
 use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\IndicesNamespace;
 use PHPUnit\Framework\TestCase;
 
@@ -31,11 +33,7 @@ class ManagerTest extends TestCase
 
     public function testConstructor()
     {
-        /** @var Client $client */
-        $client = (new ClientBuilder())
-            ->setClientClassName(Client::class)
-            ->setIndexNamePrefix('dev-')
-            ->build();
+        $client = (new ClientBuilder())->build();
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
         $cache = new Cache();
         $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
@@ -51,32 +49,32 @@ class ManagerTest extends TestCase
      */
     public function testGetRepository()
     {
-        /** @var Client $client */
-        $client = (new ClientBuilder())
-            ->setClientClassName(Client::class)
-            ->setIndexNamePrefix('dev-')
-            ->build();
-        $manager = $this->createManager($client);
-
-        $this->assertEquals($client, $manager->getClient());
+        $manager = $this->createManager();
 
         $repo = $manager->getRepository(TestDocument1::class);
         $this->assertInstanceOf(TestDocumentRepository::class, $repo);
 
+        // Test cached repository instance
         $repo = $manager->getRepository(TestDocument1::class);
         $this->assertInstanceOf(TestDocumentRepository::class, $repo);
     }
 
-    public function testGetRepositoryWithInvalidRepositoryClassName()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetRepositoryWithNotExistsRepositoryClassName()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(RepositoryNotExistsException::class);
 
         $this->createManager()->getRepository(TestDocument4::class);
     }
 
-    public function testGetRepositoryWithInvalidRepository()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetRepositoryWithInvalidInheritance()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(RepositoryInheritanceInvalidException::class);
 
         $this->createManager()->getRepository(TestDocument5::class);
     }
@@ -96,7 +94,7 @@ class ManagerTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['putTemplate'])
             ->getMock();
-        $client = $this->getMockBuilder(\Nadia\ElasticSearchODM\ElasticSearch\Client::class)
+        $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->setMethods(['indices'])
             ->getMock();
@@ -115,13 +113,12 @@ class ManagerTest extends TestCase
         $this->assertEquals($updateResult, $result);
     }
 
+    /**
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function testGetValidIndexNames()
     {
-        /** @var Client $client */
-        $client = (new ClientBuilder())
-            ->setClientClassName(Client::class)
-            ->setIndexNamePrefix('dev-')
-            ->build();
+        $client = (new ClientBuilder())->build();
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
         $cache = new Cache();
         $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
@@ -139,12 +136,8 @@ class ManagerTest extends TestCase
 
     private function createManager($client = null)
     {
-        if (null === $client) {
-            /** @var Client $client */
-            $client = (new ClientBuilder())
-                ->setClientClassName(Client::class)
-                ->setIndexNamePrefix('dev-')
-                ->build();
+        if (is_null($client)) {
+            $client = (new ClientBuilder())->build();
         }
 
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');

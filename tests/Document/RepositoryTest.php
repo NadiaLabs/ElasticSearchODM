@@ -2,9 +2,11 @@
 
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
+use Elasticsearch\Client;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Document\Manager;
-use Nadia\ElasticSearchODM\ElasticSearch\Client;
+use Nadia\ElasticSearchODM\Exception\InvalidOrderByOrientationException;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use PHPUnit\Framework\TestCase;
@@ -30,24 +32,23 @@ class RepositoryTest extends TestCase
     public function testFindOneBy()
     {
         $indexes = ['dev-index-1', 'dev-index-2'];
-        $expectedSearchResults = [
-            [
-                '_index' => 'dev-index-1',
-                '_type' => 'log',
-                '_id' => '1',
-                '_routing' => 'id:2023-01-23-0001',
-                '_source' => [
-                    'id' => '2023-01-23-0001',
-                    'created_at' => '2023-01-23',
-                ],
+        $expectedSearchResult = [
+            '_index' => 'dev-index-1',
+            '_type' => 'log',
+            '_id' => '1',
+            '_routing' => 'id:2023-01-23-0001',
+            '_source' => [
+                'id' => '2023-01-23-0001',
+                'created_at' => '2023-01-23',
             ],
         ];
         $expectedSearchBody = [
             'query' => ['bool' => ['must' => [['term' => ['id' => '2023-01-23-0001']]]]],
             'sort' => ['created_at' => ['order' => 'DESC']],
         ];
-        $client = $this->createFindByClient($indexes, $expectedSearchResults, $expectedSearchBody, 1);
-        $repo = new TestDocumentRepository($this->createManager($client));
+
+        $manager = $this->createFindByManager($indexes, [$expectedSearchResult], $expectedSearchBody, 1);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findOneBy(
             ['index-1', 'index-2'],
             'log',
@@ -55,7 +56,7 @@ class RepositoryTest extends TestCase
             ['created_at' => 'DESC']
         );
 
-        $this->assertEquals($expectedSearchResults[0], $result);
+        $this->assertEquals($expectedSearchResult, $result);
     }
 
     /**
@@ -64,16 +65,14 @@ class RepositoryTest extends TestCase
     public function testFindBy()
     {
         $indexes = ['dev-index-1', 'dev-index-2'];
-        $expectedSearchResults = [
-            [
-                '_index' => 'dev-index-1',
-                '_type' => 'log',
-                '_id' => '1',
-                '_routing' => 'id:2023-01-23-0001',
-                '_source' => [
-                    'id' => '2023-01-23-0001',
-                    'created_at' => '2023-01-23',
-                ],
+        $expectedSearchResult = [
+            '_index' => 'dev-index-1',
+            '_type' => 'log',
+            '_id' => '1',
+            '_routing' => 'id:2023-01-23-0001',
+            '_source' => [
+                'id' => '2023-01-23-0001',
+                'created_at' => '2023-01-23',
             ],
         ];
         $expectedSearchBody = [
@@ -81,8 +80,9 @@ class RepositoryTest extends TestCase
             'sort' => ['created_at' => ['order' => 'DESC']],
         ];
         $limit = 5;
-        $client = $this->createFindByClient($indexes, $expectedSearchResults, $expectedSearchBody, $limit);
-        $repo = new TestDocumentRepository($this->createManager($client));
+
+        $manager = $this->createFindByManager($indexes, [$expectedSearchResult], $expectedSearchBody, $limit);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findBy(
             ['index-1', 'index-2'],
             'log',
@@ -91,7 +91,7 @@ class RepositoryTest extends TestCase
             $limit
         );
 
-        $this->assertEquals($expectedSearchResults, $result);
+        $this->assertEquals([$expectedSearchResult], $result);
     }
 
     /**
@@ -100,16 +100,14 @@ class RepositoryTest extends TestCase
     public function testFindByWithWildCardIndexName()
     {
         $indexes = ['dev-index-*'];
-        $expectedSearchResults = [
-            [
-                '_index' => 'dev-index-1',
-                '_type' => 'log',
-                '_id' => '1',
-                '_routing' => 'id:2023-01-23-0001',
-                '_source' => [
-                    'id' => '2023-01-23-0001',
-                    'created_at' => '2023-01-23',
-                ],
+        $expectedSearchResult = [
+            '_index' => 'dev-index-1',
+            '_type' => 'log',
+            '_id' => '1',
+            '_routing' => 'id:2023-01-23-0001',
+            '_source' => [
+                'id' => '2023-01-23-0001',
+                'created_at' => '2023-01-23',
             ],
         ];
         $expectedSearchBody = [
@@ -117,8 +115,9 @@ class RepositoryTest extends TestCase
             'sort' => ['created_at' => ['order' => 'DESC']],
         ];
         $limit = 5;
-        $client = $this->createFindByClient($indexes, $expectedSearchResults, $expectedSearchBody, $limit);
-        $repo = new TestDocumentRepository($this->createManager($client));
+
+        $manager = $this->createFindByManager($indexes, [$expectedSearchResult], $expectedSearchBody, $limit);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findBy(
             $indexes,
             'log',
@@ -127,7 +126,7 @@ class RepositoryTest extends TestCase
             $limit
         );
 
-        $this->assertEquals($expectedSearchResults, $result);
+        $this->assertEquals([$expectedSearchResult], $result);
     }
 
     /**
@@ -135,8 +134,8 @@ class RepositoryTest extends TestCase
      */
     public function testFindByForEmptyIndexes()
     {
-        $client = $this->createFindByClient([], [], [], 6);
-        $repo = new TestDocumentRepository($this->createManager($client));
+        $manager = $this->createFindByManager([], [], [], 6);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findBy([], 'log', []);
 
         $this->assertEquals([], $result);
@@ -147,25 +146,24 @@ class RepositoryTest extends TestCase
      */
     public function testFindByForMustNotQuery()
     {
-        $expectedSearchResults = [
-            [
-                '_index' => 'dev-index-1',
-                '_type' => 'log',
-                '_id' => '2',
-                '_routing' => 'id:2023-01-23-0002',
-                '_source' => [
-                    'id' => '2023-01-23-0002',
-                    'created_at' => '2023-01-23',
-                ],
+        $expectedSearchResult = [
+            '_index' => 'dev-index-1',
+            '_type' => 'log',
+            '_id' => '2',
+            '_routing' => 'id:2023-01-23-0002',
+            '_source' => [
+                'id' => '2023-01-23-0002',
+                'created_at' => '2023-01-23',
             ],
         ];
         $expectedSearchBody = ['query' => ['bool' => ['must_not' => [['term' => ['id' => '2023-01-23-0001']]]]]];
         $limit = 7;
-        $client = $this->createFindByClient(['dev-index-1'], $expectedSearchResults, $expectedSearchBody, $limit);
-        $repo = new TestDocumentRepository($this->createManager($client));
+
+        $manager = $this->createFindByManager(['dev-index-1'], [$expectedSearchResult], $expectedSearchBody, $limit);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findBy(['index-1'], 'log', ['!id' => '2023-01-23-0001'], [], $limit);
 
-        $this->assertEquals($expectedSearchResults, $result);
+        $this->assertEquals([$expectedSearchResult], $result);
     }
 
     /**
@@ -173,27 +171,26 @@ class RepositoryTest extends TestCase
      */
     public function testFindByForTermsQuery()
     {
-        $expectedSearchResults = [
-            [
-                '_index' => 'dev-index-1',
-                '_type' => 'log',
-                '_id' => '3',
-                '_routing' => 'id:2023-01-23-0003',
-                '_source' => [
-                    'id' => '2023-01-23-0003',
-                    'created_at' => '2023-01-23',
-                ],
+        $expectedSearchResult = [
+            '_index' => 'dev-index-1',
+            '_type' => 'log',
+            '_id' => '3',
+            '_routing' => 'id:2023-01-23-0003',
+            '_source' => [
+                'id' => '2023-01-23-0003',
+                'created_at' => '2023-01-23',
             ],
         ];
         $expectedSearchBody = [
             'query' => ['bool' => ['must' => [['terms' => ['id' => ['2023-01-23-0003', '2023-01-23-0004']]]]]],
         ];
         $limit = 8;
-        $client = $this->createFindByClient(['dev-index-1'], $expectedSearchResults, $expectedSearchBody, $limit);
-        $repo = new TestDocumentRepository($this->createManager($client));
+
+        $manager = $this->createFindByManager(['dev-index-1'], [$expectedSearchResult], $expectedSearchBody, $limit);
+        $repo = new TestDocumentRepository($manager);
         $result = $repo->findBy(['index-1'], 'log', ['id' => ['2023-01-23-0003', '2023-01-23-0004']], [], $limit);
 
-        $this->assertEquals($expectedSearchResults, $result);
+        $this->assertEquals([$expectedSearchResult], $result);
     }
 
     /**
@@ -201,36 +198,45 @@ class RepositoryTest extends TestCase
      */
     public function testFindByInvalidOrderBy()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidOrderByOrientationException::class);
 
-        $client = $this->createFindByClient(['dev-index-1'], [], [], 6);
-        $repo = new TestDocumentRepository($this->createManager($client));
+        $manager = $this->createFindByManager(['dev-index-1'], [], [], 6);
+        $repo = new TestDocumentRepository($manager);
 
         $repo->findBy(['index-1'], 'log', [], ['id' => 'invalid order']);
     }
 
-    private function createFindByClient(array $indexes, array $expectedSearchResults, array $expectedSearchBody, $limit)
-    {
+    private function createFindByManager(
+        array $indexes,
+        array $expectedSearchResults,
+        array $expectedSearchBody,
+        $limit
+    ) {
         $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getValidIndexNames', 'search'])
+            ->setMethods(['search'])
+            ->getMock();
+        $indexNameProvider = $this->getMockBuilder(IndexNameProvider::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getValidIndexNames'])
             ->getMock();
 
-        $client->method('getValidIndexNames')->willReturn($indexes);
         $client->method('search')->willReturn(['hits' => ['hits' => $expectedSearchResults]]);
+        $indexNameProvider->method('getValidIndexNames')->willReturn($indexes);
 
         if (!empty($expectedSearchResults)) {
-            $client->expects($this->once())
-                ->method('search')
-                ->with([
-                    'index' => join(',', $indexes),
-                    'type' => 'log',
-                    'size' => $limit,
-                    'body' => $expectedSearchBody,
-                ]);
+            $parameters = [
+                'index' => join(',', $indexes),
+                'type' => 'log',
+                'size' => $limit,
+                'body' => $expectedSearchBody,
+            ];
+            $client->expects($this->once())->method('search')->with($parameters);
         }
 
-        return $client;
+        $metadataClassLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
+
+        return new Manager($client, $metadataClassLoader, $indexNameProvider);
     }
 
     /**
@@ -261,12 +267,11 @@ class RepositoryTest extends TestCase
             ->getMock();
 
         $client->method('index')->willReturn($indexResult);
-
         $client->expects($this->once())->method('index')->with($indexParams);
 
         $document = new TestDocument1('2023-01-23-0001', '2023-01-23');
 
-        $repo = new TestDocumentRepository($this->createManager($client));
+        $repo = new TestDocumentRepository($this->createWriteManager($client));
         $result = $repo->write($document);
 
         $this->assertEquals($indexResult, $result);
@@ -308,7 +313,7 @@ class RepositoryTest extends TestCase
         $client->method('bulk')->willReturn([]);
         $client->expects($this->exactly(2))->method('bulk')->withConsecutive([$bulkParams[0]], [$bulkParams[1]]);
 
-        $repo = new TestDocumentRepository($this->createManager($client));
+        $repo = new TestDocumentRepository($this->createWriteManager($client));
         $result = $repo->bulkWrite($documents);
 
         $this->assertEquals(
@@ -326,13 +331,13 @@ class RepositoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $repo = new TestDocumentRepository($this->createManager($client));
+        $repo = new TestDocumentRepository($this->createWriteManager($client));
         $result = $repo->bulkWrite([]);
 
         $this->assertEquals([], $result);
     }
 
-    private function createManager($client)
+    private function createWriteManager($client)
     {
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
 
