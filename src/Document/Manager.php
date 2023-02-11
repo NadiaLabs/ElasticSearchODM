@@ -5,6 +5,7 @@ namespace Nadia\ElasticSearchODM\Document;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\ElasticSearch\Client;
+use Psr\Cache\CacheItemPoolInterface;
 
 class Manager
 {
@@ -19,6 +20,16 @@ class Manager
     protected $classMetadataLoader;
 
     /**
+     * @var IndexNameProvider
+     */
+    protected $indexNameProvider;
+
+    /**
+     * @var CacheItemPoolInterface|null
+     */
+    protected $cache;
+
+    /**
      * @var Repository[]
      */
     protected $repositories = [];
@@ -28,11 +39,19 @@ class Manager
      *
      * @param Client $client
      * @param ClassMetadataLoader $classMetadataLoader
+     * @param IndexNameProvider $indexNameProvider
+     * @param CacheItemPoolInterface|null $cache
      */
-    public function __construct($client, ClassMetadataLoader $classMetadataLoader)
-    {
+    public function __construct(
+        $client,
+        ClassMetadataLoader $classMetadataLoader,
+        IndexNameProvider $indexNameProvider = null,
+        CacheItemPoolInterface $cache = null
+    ) {
         $this->client = $client;
         $this->classMetadataLoader = $classMetadataLoader;
+        $this->indexNameProvider = $indexNameProvider;
+        $this->cache = $cache;
     }
 
     /**
@@ -85,6 +104,26 @@ class Manager
     }
 
     /**
+     * @param string[] $indexNames Index names without prefix
+     *
+     * @return string[] Valid index names with prefix
+     *
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getValidIndexNames(array $indexNames)
+    {
+        return $this->indexNameProvider->getValidIndexNames($indexNames);
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
      * @param string $documentClassName
      *
      * @return ClassMetadata
@@ -97,10 +136,18 @@ class Manager
     }
 
     /**
-     * @return Client
+     * @return IndexNameProvider
      */
-    public function getClient()
+    public function getIndexNameProvider()
     {
-        return $this->client;
+        return $this->indexNameProvider;
+    }
+
+    /**
+     * @return CacheItemPoolInterface|null
+     */
+    public function getCache()
+    {
+        return $this->cache;
     }
 }

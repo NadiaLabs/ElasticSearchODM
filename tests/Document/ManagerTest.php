@@ -3,10 +3,10 @@
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Document\Manager;
-use Nadia\ElasticSearchODM\Document\Repository;
 use Nadia\ElasticSearchODM\ElasticSearch\ClientBuilder;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\InvalidRepository;
+use Nadia\ElasticSearchODM\Tests\Stubs\Cache\Cache;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument4;
@@ -27,6 +27,23 @@ class ManagerTest extends TestCase
         if (!file_exists($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }
+    }
+
+    public function testConstructor()
+    {
+        /** @var Client $client */
+        $client = (new ClientBuilder())
+            ->setClientClassName(Client::class)
+            ->setIndexNamePrefix('dev-')
+            ->build();
+        $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
+        $cache = new Cache();
+        $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
+        $manager = new Manager($client, $metadataLoader, $indexNameProvider, $cache);
+
+        $this->assertEquals($client, $manager->getClient());
+        $this->assertEquals($cache, $manager->getCache());
+        $this->assertEquals($indexNameProvider, $manager->getIndexNameProvider());
     }
 
     /**
@@ -96,6 +113,28 @@ class ManagerTest extends TestCase
         // Make sure "updateTemplate" result is the same with the first one
         $result = $manager->updateTemplate(TestDocument1::class);
         $this->assertEquals($updateResult, $result);
+    }
+
+    public function testGetValidIndexNames()
+    {
+        /** @var Client $client */
+        $client = (new ClientBuilder())
+            ->setClientClassName(Client::class)
+            ->setIndexNamePrefix('dev-')
+            ->build();
+        $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
+        $cache = new Cache();
+        $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
+        $manager = new Manager($client, $metadataLoader, $indexNameProvider, $cache);
+
+        $cacheItem = $cache->getItem($indexNameProvider->getIndexAliasesCacheKey());
+        $aliases = ['dev-index-001' => ['aliases' => []], 'dev-index-002' => ['aliases' => []]];
+
+        $cacheItem->set($aliases);
+        $cache->save($cacheItem);
+
+        $indexNames = $manager->getValidIndexNames(['index-001', 'index-002', 'index-003']);
+        $this->assertEquals(['dev-index-001', 'dev-index-002'], $indexNames);
     }
 
     private function createManager($client = null)
