@@ -89,7 +89,7 @@ class Manager
      *
      * @throws \ReflectionException
      */
-    public function updateTemplate($documentClassName)
+    public function updateIndexTemplate($documentClassName)
     {
         $metadata = $this->getClassMetadata($documentClassName);
         $template = $metadata->template;

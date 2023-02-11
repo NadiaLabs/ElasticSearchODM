@@ -107,11 +107,11 @@ class ManagerTest extends TestCase
 
         $manager = $this->createManager($client);
 
-        $result = $manager->updateTemplate(TestDocument1::class);
+        $result = $manager->updateIndexTemplate(TestDocument1::class);
         $this->assertEquals($updateResult, $result);
 
         // Make sure "updateTemplate" result is the same with the first one
-        $result = $manager->updateTemplate(TestDocument1::class);
+        $result = $manager->updateIndexTemplate(TestDocument1::class);
         $this->assertEquals($updateResult, $result);
     }
 
