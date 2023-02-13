@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+## v0.1.12
+
+- Add `IndexNameProvider` to provide valid index names
+- Add `CacheItemPoolInterface` to `Manager` as a dependency
+- Rename method name `Manager::updateTemplate` to `Manager::updateIndexTemplate`
+- Remove `Nadia\ElasticSearchODM\ElasticSearch\Client` and `Nadia\ElasticSearchODM\ElasticSearch\ClientBuilder`
+
 ## v0.1.11
 
 - Fix missing "properties" in ESObject mapping
