@@ -3,9 +3,9 @@
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
 use Elasticsearch\Client;
+use Elasticsearch\Namespaces\IndicesNamespace;
 use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Tests\Stubs\Cache\Cache;
-use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\IndicesNamespace;
 use PHPUnit\Framework\TestCase;
 
 class IndexNameProviderTest extends TestCase

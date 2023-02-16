@@ -4,6 +4,7 @@ namespace Nadia\ElasticSearchODM\Tests\Document;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch\Namespaces\IndicesNamespace;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Document\Manager;
@@ -14,7 +15,6 @@ use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepositor
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument4;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument5;
-use Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\IndicesNamespace;
 use PHPUnit\Framework\TestCase;
 
 class ManagerTest extends TestCase
