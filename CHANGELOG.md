@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.13
+
+- Update support PHP versions: 5.6 ~ 7.4
+
 ## v0.1.12
 
 - Add `IndexNameProvider` to provide valid index names
