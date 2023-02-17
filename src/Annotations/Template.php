@@ -10,7 +10,10 @@ final class Template
 {
     public $name;
 
-    public $index_name_pattern;
+    /**
+     * @var string[]
+     */
+    public $index_patterns = [];
 
     /**
      * @var \Nadia\ElasticSearchODM\Annotations\TemplateSettings[]
@@ -28,5 +31,7 @@ final class Template
      */
     public $settings;
 
-    public $mappingMetaFields = [];
+    public $mapping_meta_fields = [];
+
+    public $order = 0;
 }

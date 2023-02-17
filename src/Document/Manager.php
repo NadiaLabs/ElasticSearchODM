@@ -96,7 +96,14 @@ class Manager
     {
         $metadata = $this->getClassMetadata($documentClassName);
         $template = $metadata->template;
-        $template['template'] = $metadata->indexNamePrefix . $template['template'];
+
+        foreach ($template['index_patterns'] as &$indexPattern) {
+            $indexPattern = $metadata->indexNamePrefix . $indexPattern;
+        }
+        if (version_compare(Client::VERSION, '6.0.0', '<')) {
+            $template['template'] = join(',', $template['index_patterns']);
+            unset($template['index_patterns']);
+        }
 
         $params = [
             'name' => $metadata->templateName,

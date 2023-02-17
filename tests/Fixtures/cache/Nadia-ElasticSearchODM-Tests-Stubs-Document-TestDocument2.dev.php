@@ -8,7 +8,8 @@
   'templateName' => 'testing-template-name',
   'template' => 
   array (
-    'template' => 'idx-testing-*',
+    'index_patterns' => ['idx-testing-*'],
+    'order' => 0,
     'settings' => 
     array (
       'number_of_shards' => '5',

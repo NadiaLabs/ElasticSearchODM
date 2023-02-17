@@ -16,12 +16,12 @@ use Nadia\ElasticSearchODM\Document\Traits\ColumnSource;
  * )
  * @ES\Template(
  *     name="testing-template-name",
- *     index_name_pattern="idx-testing-*",
+ *     index_patterns={"idx-testing-*"},
  *     settings={
  *       "prod": @ES\TemplateSettings(number_of_shards="5", refresh_interval="30s"),
  *       "dev": @ES\TemplateSettings(number_of_shards="5"),
  *     },
- *     mappingMetaFields={@ES\MappingMetaFields\Source(enabled=false)},
+ *     mapping_meta_fields={@ES\MappingMetaFields\Source(enabled=false)},
  * )
  */
 class TestDocument2

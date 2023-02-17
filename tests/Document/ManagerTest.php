@@ -87,7 +87,15 @@ class ManagerTest extends TestCase
     {
         $metadataFilename = 'Nadia-ElasticSearchODM-Tests-Stubs-Document-TestDocument1.dev.php';
         $metadata = require __DIR__ . '/../Fixtures/cache/' . $metadataFilename;
-        $metadata['template']['template'] = $metadata['indexNamePrefix'] . $metadata['template']['template'];
+
+        foreach ($metadata['template']['index_patterns'] as &$indexPattern) {
+            $indexPattern = $metadata['indexNamePrefix'] . $indexPattern;
+        }
+        if (version_compare(Client::VERSION, '6.0.0', '<')) {
+            $metadata['template']['template'] = join(',', $metadata['template']['index_patterns']);
+            unset($metadata['template']['index_patterns']);
+        }
+
         $updateResult = ['acknowledged' => true];
         $updateParams = ['name' => 'testing-template-name', 'body' => $metadata['template']];
         $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)

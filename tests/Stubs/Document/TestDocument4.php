@@ -14,7 +14,7 @@ use Nadia\ElasticSearchODM\Annotations as ES;
  * )
  * @ES\Template(
  *     name="testing-template-name",
- *     index_name_pattern="idx-testing-*",
+ *     index_patterns={"idx-testing-*"},
  * )
  */
 class TestDocument4

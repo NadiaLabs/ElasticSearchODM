@@ -158,7 +158,8 @@ final class ClassMetadataLoader
                 }
 
                 $metadata['template'] = [
-                    'template' => $annotation->index_name_pattern,
+                    'index_patterns' => $annotation->index_patterns,
+                    'order' => $annotation->order,
                     'settings' => [],
                 ];
 
@@ -175,7 +176,7 @@ final class ClassMetadataLoader
                     unset($metadata['template']['settings']);
                 }
 
-                foreach ($annotation->mappingMetaFields as $metaField) {
+                foreach ($annotation->mapping_meta_fields as $metaField) {
                     $metaFieldClassName = get_class($metaField);
                     $metaFieldName = array_slice(explode('\\', $metaFieldClassName), -1)[0];
                     $metaFieldName = '_' . $this->convertCamelToSnake($metaFieldName);

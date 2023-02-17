@@ -8,7 +8,8 @@
   'templateName' => 'template-dev-testing-template-name',
   'template' => 
   array (
-    'template' => 'idx-testing-*',
+    'index_patterns' => ['idx-testing-*'],
+    'order' => 0,
     'mappings' => 
     array (
       'log' => 

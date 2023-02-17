@@ -81,9 +81,10 @@ class IndexNameProviderTest extends TestCase
     {
         $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAliases'])
+            ->setMethods(['getAliases', 'getAlias'])
             ->getMock();
         $indicesNamespace->method('getAliases')->willReturn($aliases);
+        $indicesNamespace->method('getAlias')->willReturn($aliases);
 
         $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()

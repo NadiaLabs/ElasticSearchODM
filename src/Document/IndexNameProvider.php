@@ -99,7 +99,7 @@ class IndexNameProvider
 
         $this->aliases = [];
 
-        foreach ($this->client->indices()->getAliases() as $key => $alias) {
+        foreach ($this->getAliases() as $key => $alias) {
             if ($this->isValidIndexName($key)) {
                 $this->aliases[$key] = true;
             }
@@ -161,5 +161,14 @@ class IndexNameProvider
         }
 
         return 0 === strncmp($indexName, $this->indexNamePrefix, $this->indexNamePrefixLength);
+    }
+
+    protected function getAliases()
+    {
+        if (version_compare(Client::VERSION, '7.2.0', '<')) {
+            return $this->client->indices()->getAliases();
+        }
+
+        return $this->client->indices()->getAlias();
     }
 }
