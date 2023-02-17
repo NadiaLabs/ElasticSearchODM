@@ -1,0 +1,37 @@
+name: Run tests
+
+on: [push]
+
+jobs:
+  run-tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - php: '7.4'
+            composer: 'composer'
+          - php: '7.3'
+            composer: 'composer'
+          - php: '7.2'
+            composer: 'composer:2.2'
+          - php: '7.1'
+            composer: 'composer:2.2'
+          - php: '7.0'
+            composer: 'composer:2.2'
+          - php: '5.6'
+            composer: 'composer:2.2'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          tools: "${{ matrix.composer }}"
+
+      - name: Run composer install
+        run: composer install
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/simple-phpunit --coverage-text
