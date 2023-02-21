@@ -2,3 +2,4 @@
 /phpcs.xml.dist export-ignore
 /phpunit.xml.dist export-ignore
 /.gitignore export-ignore
+/.github export-ignore
