@@ -291,7 +291,13 @@ class RepositoryTest extends TestCase
                 'index' => 'dev-idx-testing-20230122',
                 'type' => 'log',
                 'body' => [
-                    ['index' => ['_index' => 'dev-idx-testing-20230122', '_type' => 'log']],
+                    [
+                        'index' => [
+                            '_index' => 'dev-idx-testing-20230122',
+                            '_type' => 'log',
+                            '_routing' => 'id:2023-01-22-0001',
+                        ],
+                    ],
                     ['id' => '2023-01-22-0001', 'created_at' => '2023-01-22'],
                 ],
             ],
@@ -299,7 +305,13 @@ class RepositoryTest extends TestCase
                 'index' => 'dev-idx-testing-20230123',
                 'type' => 'log',
                 'body' => [
-                    ['index' => ['_index' => 'dev-idx-testing-20230123', '_type' => 'log']],
+                    [
+                        'index' => [
+                            '_index' => 'dev-idx-testing-20230123',
+                            '_type' => 'log',
+                            '_routing' => 'id:2023-01-23-0001',
+                        ],
+                    ],
                     ['id' => '2023-01-23-0001', 'created_at' => '2023-01-23'],
                 ],
             ],

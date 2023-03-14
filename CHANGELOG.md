@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.14
+
+- Add missing `_routing` parameter
+
 ## v0.1.13
 
 - Update support PHP versions: 5.6 ~ 7.4

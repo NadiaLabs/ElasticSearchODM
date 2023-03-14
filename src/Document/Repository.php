@@ -163,7 +163,12 @@ abstract class Repository
                 /** @var ClassMetadata $metadata */
                 $metadata = $info['metadata'];
                 $ref = $metadata->getReflectionClass();
+                $indexParams = ['index' => ['_index' => $indexName, '_type' => $metadata->indexTypeName]];
                 $data = [];
+
+                if ($routing = $metadata->getRouting($info['document'])) {
+                    $indexParams['index']['_routing'] = $routing;
+                }
 
                 foreach ($metadata->columnsObjectToElastic as $propertyName => $columnName) {
                     $property = $ref->getProperty($propertyName);
@@ -172,7 +177,7 @@ abstract class Repository
                     $data[$columnName] = $property->getValue($info['document']);
                 }
 
-                $body[] = ['index' => ['_index' => $indexName, '_type' => $metadata->indexTypeName]];
+                $body[] = $indexParams;
                 $body[] = $data;
             }
 
