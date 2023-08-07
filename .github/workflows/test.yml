@@ -30,8 +30,12 @@ jobs:
           php-version: "${{ matrix.php }}"
           tools: "${{ matrix.composer }}"
 
-      - name: Run composer install
-        run: composer install
+      - name: Require doctrine/lexer 1.x
+        if: "${{ matrix.php == '7.1' }}"
+        run: composer require doctrine/lexer ^1.0
+
+      - name: Run composer update
+        run: composer update
 
       - name: Run PHPUnit tests
         run: vendor/bin/simple-phpunit --coverage-text
