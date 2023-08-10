@@ -2,17 +2,17 @@
 
 namespace Nadia\ElasticSearchODM\Document;
 
-use Elasticsearch\Client;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Exception\RepositoryInheritanceInvalidException;
 use Nadia\ElasticSearchODM\Exception\RepositoryNotExistsException;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 class Manager
 {
     /**
-     * @var Client
+     * @var \Elastic\ElasticSearch\Client|\ElasticSearch\Client
      */
     protected $client;
 
@@ -39,7 +39,7 @@ class Manager
     /**
      * Manager constructor.
      *
-     * @param Client $client
+     * @param \Elastic\ElasticSearch\Client|\ElasticSearch\Client $client
      * @param ClassMetadataLoader $classMetadataLoader
      * @param IndexNameProvider $indexNameProvider
      * @param CacheItemPoolInterface|null $cache
@@ -100,7 +100,7 @@ class Manager
         foreach ($template['index_patterns'] as &$indexPattern) {
             $indexPattern = $metadata->indexNamePrefix . $indexPattern;
         }
-        if (version_compare(Client::VERSION, '6.0.0', '<')) {
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '6.0.0', '<')) {
             $template['template'] = join(',', $template['index_patterns']);
             unset($template['index_patterns']);
         }
@@ -110,7 +110,7 @@ class Manager
             'body' => $template,
         ];
 
-        return $this->getClient()->indices()->putTemplate($params);
+        return ElasticSearchHelper::convertResponseToArray($this->getClient()->indices()->putTemplate($params));
     }
 
     /**
@@ -126,7 +126,7 @@ class Manager
     }
 
     /**
-     * @return Client
+     * @return \Elastic\ElasticSearch\Client|\ElasticSearch\Client
      */
     public function getClient()
     {

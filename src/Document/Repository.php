@@ -4,6 +4,7 @@ namespace Nadia\ElasticSearchODM\Document;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
 use Nadia\ElasticSearchODM\Exception\InvalidOrderByOrientationException;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use Psr\Cache\InvalidArgumentException;
 use ReflectionException;
 
@@ -98,6 +99,7 @@ abstract class Repository
         }
 
         $result = $this->dm->getClient()->search($params);
+        $result = ElasticSearchHelper::convertResponseToArray($result);
 
         return (empty($result['hits']['hits'])) ? [] : $result['hits']['hits'];
     }
@@ -132,7 +134,7 @@ abstract class Repository
             $params['routing'] = $routing;
         }
 
-        return $this->dm->getClient()->index($params);
+        return ElasticSearchHelper::convertResponseToArray($this->dm->getClient()->index($params));
     }
 
     /**
@@ -181,9 +183,14 @@ abstract class Repository
                 $body[] = $data;
             }
 
-            $results[$indexName] = $this->dm->getClient()->bulk(
-                ['index' => $indexName, 'type' => $infos[0]['metadata']->indexTypeName, 'body' => $body]
-            );
+            $result = $this->dm->getClient()->bulk([
+                'index' => $indexName,
+                'type' => $infos[0]['metadata']->indexTypeName,
+                'body' => $body,
+            ]);
+            $result = ElasticSearchHelper::convertResponseToArray($result);
+
+            $results[$indexName] = $result;
         }
 
         return $results;

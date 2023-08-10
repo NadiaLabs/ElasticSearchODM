@@ -2,13 +2,13 @@
 
 namespace Nadia\ElasticSearchODM\Document;
 
-use ElasticSearch\Client;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 class IndexNameProvider
 {
     /**
-     * @var Client
+     * @var \Elastic\ElasticSearch\Client|\ElasticSearch\Client
      */
     protected $client;
 
@@ -40,7 +40,7 @@ class IndexNameProvider
     /**
      * IndexNameProvider constructor.
      *
-     * @param Client $client
+     * @param \Elastic\ElasticSearch\Client|\ElasticSearch\Client $client
      * @param string $indexNamePrefix
      * @param CacheItemPoolInterface|null $cache
      */
@@ -163,12 +163,17 @@ class IndexNameProvider
         return 0 === strncmp($indexName, $this->indexNamePrefix, $this->indexNamePrefixLength);
     }
 
+    /**
+     * @return array
+     */
     protected function getAliases()
     {
-        if (version_compare(Client::VERSION, '7.2.0', '<')) {
-            return $this->client->indices()->getAliases();
+        $indices = $this->client->indices();
+
+        if (method_exists($indices, 'getAliases')) {
+            return $indices->getAliases();
         }
 
-        return $this->client->indices()->getAlias();
+        return ElasticSearchHelper::convertResponseToArray($indices->getAlias());
     }
 }

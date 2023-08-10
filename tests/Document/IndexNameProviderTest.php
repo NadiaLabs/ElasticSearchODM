@@ -2,18 +2,17 @@
 
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
-use Elasticsearch\Client;
-use Elasticsearch\Namespaces\IndicesNamespace;
 use Nadia\ElasticSearchODM\Document\IndexNameProvider;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticSearchODM\Tests\PHPUnit\Framework\TestCase;
 use Nadia\ElasticSearchODM\Tests\Stubs\Cache\Cache;
-use PHPUnit\Framework\TestCase;
 
 class IndexNameProviderTest extends TestCase
 {
     public function testGetValidIndexNames()
     {
         $aliases = $this->getMockAliases();
-        $client = $this->getMockClient($aliases);
+        $client = $this->mockElasticSearchClient($aliases);
         $cache = new Cache();
         $provider = new IndexNameProvider($client, 'dev-', $cache);
 
@@ -26,7 +25,7 @@ class IndexNameProviderTest extends TestCase
 
         // Test when indexNamePrefix is empty
         $aliases = $this->getMockAliasesWithoutIndexNamePrefix();
-        $client = $this->getMockClient($aliases);
+        $client = $this->mockElasticSearchClient($aliases);
         $cache = new Cache();
         $provider = new IndexNameProvider($client, '', $cache);
         $indexNames = $provider->getValidIndexNames(['index-001', 'index-003', 'index-not-exists']);
@@ -35,7 +34,7 @@ class IndexNameProviderTest extends TestCase
 
     public function testGetValidIndexNamesWhenAliasesCacheExists()
     {
-        $client = $this->getMockClient($this->getMockAliases());
+        $client = $this->mockElasticSearchClient($this->getMockAliases());
         $cache = new Cache();
         $provider = new IndexNameProvider($client, 'dev-', $cache);
 
@@ -59,7 +58,7 @@ class IndexNameProviderTest extends TestCase
     public function testGetValidIndexNamesWithRefreshIndexAliasesCache()
     {
         $aliases = $this->getMockAliases();
-        $client = $this->getMockClient($aliases);
+        $client = $this->mockElasticSearchClient($aliases);
         $cache = new Cache();
         $provider = new IndexNameProvider($client, 'dev-', $cache);
         $provider->enableRefreshIndexAliasesCache();
@@ -68,7 +67,7 @@ class IndexNameProviderTest extends TestCase
         $this->assertEquals(['dev-index-001', 'dev-index-003'], $indexNames);
 
         $aliases = $this->getMockAliases();
-        $client = $this->getMockClient($aliases);
+        $client = $this->mockElasticSearchClient($aliases);
         $cache = new Cache();
         $provider = new IndexNameProvider($client, 'dev-', $cache);
         $provider->disableRefreshIndexAliasesCache();
@@ -77,18 +76,30 @@ class IndexNameProviderTest extends TestCase
         $this->assertEquals(['dev-index-001', 'dev-index-003'], $indexNames);
     }
 
-    private function getMockClient($aliases)
+    private function mockElasticSearchClient($aliases)
     {
-        $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getAliases', 'getAlias'])
-            ->getMock();
-        $indicesNamespace->method('getAliases')->willReturn($aliases);
-        $indicesNamespace->method('getAlias')->willReturn($aliases);
+        if (class_exists('Elastic\Elasticsearch\Response\Elasticsearch')) {
+            $aliasesResponseHeaders = [
+                'Content-Type' => 'application/json',
+                \Elastic\Elasticsearch\Response\Elasticsearch::HEADER_CHECK =>
+                    \Elastic\Elasticsearch\Response\Elasticsearch::PRODUCT_NAME,
+            ];
+            $aliasesResponse = new \GuzzleHttp\Psr7\Response(200, $aliasesResponseHeaders, json_encode($aliases));
+            $aliases = new \Elastic\Elasticsearch\Response\Elasticsearch();
+            $aliases->setResponse($aliasesResponse);
+        }
 
-        $client = $this->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['indices'])
+        $indicesNamespaceClassName = ElasticSearchHelper::getNamespaceClassName('Indices');
+        $indicesNamespaceMockMethods =
+            method_exists($indicesNamespaceClassName, 'getAlias') ? ['getAlias'] : ['getAliases'];
+        $indicesNamespace = $this
+            ->createMockBuilderAndOnlyMethods($indicesNamespaceClassName, $indicesNamespaceMockMethods)
+            ->getMock();
+        $indicesNamespace->method($indicesNamespaceMockMethods[0])->willReturn($aliases);
+
+        $clientClassName = ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder();
+        $client = $this
+            ->createMockBuilderAndOnlyMethods($clientClassName, ['indices'])
             ->getMock();
         $client->method('indices')->willReturn($indicesNamespace);
 

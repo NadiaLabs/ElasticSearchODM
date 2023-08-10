@@ -2,20 +2,18 @@
 
 namespace Nadia\ElasticSearchODM\Tests\Document;
 
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
-use Elasticsearch\Namespaces\IndicesNamespace;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Document\IndexNameProvider;
 use Nadia\ElasticSearchODM\Document\Manager;
 use Nadia\ElasticSearchODM\Exception\RepositoryInheritanceInvalidException;
 use Nadia\ElasticSearchODM\Exception\RepositoryNotExistsException;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticSearchODM\Tests\PHPUnit\Framework\TestCase;
 use Nadia\ElasticSearchODM\Tests\Stubs\Cache\Cache;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument4;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument5;
-use PHPUnit\Framework\TestCase;
 
 class ManagerTest extends TestCase
 {
@@ -33,7 +31,7 @@ class ManagerTest extends TestCase
 
     public function testConstructor()
     {
-        $client = (new ClientBuilder())->build();
+        $client = $this->createElasticSearchClientByElasticSearchClientBuilder();
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
         $cache = new Cache();
         $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
@@ -44,9 +42,6 @@ class ManagerTest extends TestCase
         $this->assertEquals($indexNameProvider, $manager->getIndexNameProvider());
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function testGetRepository()
     {
         $manager = $this->createManager();
@@ -59,30 +54,24 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(TestDocumentRepository::class, $repo);
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function testGetRepositoryWithNotExistsRepositoryClassName()
     {
+        $manager = $this->createManager();
+
         $this->expectException(RepositoryNotExistsException::class);
 
-        $this->createManager()->getRepository(TestDocument4::class);
+        $manager->getRepository(TestDocument4::class);
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function testGetRepositoryWithInvalidInheritance()
     {
+        $manager = $this->createManager();
+
         $this->expectException(RepositoryInheritanceInvalidException::class);
 
-        $this->createManager()->getRepository(TestDocument5::class);
+        $manager->getRepository(TestDocument5::class);
     }
 
-
-    /**
-     * @throws \ReflectionException
-     */
     public function testUpdateTemplate()
     {
         $metadataFilename = 'Nadia-ElasticSearchODM-Tests-Stubs-Document-TestDocument1.dev.php';
@@ -91,25 +80,14 @@ class ManagerTest extends TestCase
         foreach ($metadata['template']['index_patterns'] as &$indexPattern) {
             $indexPattern = $metadata['indexNamePrefix'] . $indexPattern;
         }
-        if (version_compare(Client::VERSION, '6.0.0', '<')) {
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '6.0.0', '<')) {
             $metadata['template']['template'] = join(',', $metadata['template']['index_patterns']);
             unset($metadata['template']['index_patterns']);
         }
 
         $updateResult = ['acknowledged' => true];
         $updateParams = ['name' => 'testing-template-name', 'body' => $metadata['template']];
-        $indicesNamespace = $this->getMockBuilder(IndicesNamespace::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['putTemplate'])
-            ->getMock();
-        $client = $this->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['indices'])
-            ->getMock();
-
-        $indicesNamespace->method('putTemplate')->willReturn($updateResult);
-        $indicesNamespace->expects($this->exactly(2))->method('putTemplate')->with($updateParams);
-        $client->method('indices')->willReturn($indicesNamespace);
+        $client = $this->mockElasticSearchClientForTestUpdateTemplate($updateParams, $updateResult);
 
         $manager = $this->createManager($client);
 
@@ -121,12 +99,45 @@ class ManagerTest extends TestCase
         $this->assertEquals($updateResult, $result);
     }
 
+    private function mockElasticSearchClientForTestUpdateTemplate(array $updateParams, array $updateResult)
+    {
+        if (class_exists('Elastic\Elasticsearch\Response\Elasticsearch')) {
+            $updateResultResponseHeaders = [
+                'Content-Type' => 'application/json',
+                \Elastic\Elasticsearch\Response\Elasticsearch::HEADER_CHECK =>
+                    \Elastic\Elasticsearch\Response\Elasticsearch::PRODUCT_NAME,
+            ];
+            $updateResultResponse = new \GuzzleHttp\Psr7\Response(
+                200,
+                $updateResultResponseHeaders,
+                json_encode($updateResult)
+            );
+            $updateResult = new \Elastic\Elasticsearch\Response\Elasticsearch();
+            $updateResult->setResponse($updateResultResponse);
+        }
+
+        $indicesNamespace = $this
+            ->createMockBuilderAndOnlyMethods(ElasticSearchHelper::getNamespaceClassName('Indices'), ['putTemplate'])
+            ->getMock();
+
+        $indicesNamespace->method('putTemplate')->willReturn($updateResult);
+        $indicesNamespace->expects($this->exactly(2))->method('putTemplate')->with($updateParams);
+
+        $clientClassName = ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder();
+        $client = $this
+            ->createMockBuilderAndOnlyMethods($clientClassName, ['indices'])
+            ->getMock();
+        $client->method('indices')->willReturn($indicesNamespace);
+
+        return $client;
+    }
+
     /**
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function testGetValidIndexNames()
     {
-        $client = (new ClientBuilder())->build();
+        $client = $this->createElasticSearchClientByElasticSearchClientBuilder();
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
         $cache = new Cache();
         $indexNameProvider = new IndexNameProvider($client, 'dev-', $cache);
@@ -145,12 +156,22 @@ class ManagerTest extends TestCase
     private function createManager($client = null)
     {
         if (is_null($client)) {
-            $client = (new ClientBuilder())->build();
+            $client = $this->createElasticSearchClientByElasticSearchClientBuilder();
         }
 
         $metadataLoader = new ClassMetadataLoader($this->getCacheDir(), false, 'dev-', 'dev');
 
         return new Manager($client, $metadataLoader);
+    }
+
+    private function createElasticSearchClientByElasticSearchClientBuilder()
+    {
+        $clientBuilderClassName = 'Elastic\Elasticsearch\ClientBuilder';
+        if (!class_exists($clientBuilderClassName)) {
+            $clientBuilderClassName = 'Elasticsearch\ClientBuilder';
+        }
+
+        return (new $clientBuilderClassName())->build();
     }
 
     private function getCacheDir()
