@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## v0.1.15
+
+- Support PHP 8.0 ~ 8.2
+- Support `elasticsearch/elasticsearch 8.*`
+
 ## v0.1.14
 
 - Add missing `_routing` parameter
