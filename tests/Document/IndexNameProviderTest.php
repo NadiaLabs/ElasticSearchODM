@@ -90,8 +90,10 @@ class IndexNameProviderTest extends TestCase
         }
 
         $indicesNamespaceClassName = ElasticSearchHelper::getNamespaceClassName('Indices');
-        $indicesNamespaceMockMethods =
-            method_exists($indicesNamespaceClassName, 'getAliases') ? ['getAliases'] : ['getAlias'];
+        $indicesNamespaceMockMethods = ['getAlias'];
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.2.0', '<')) {
+            $indicesNamespaceMockMethods = ['getAliases'];
+        }
         $indicesNamespace = $this
             ->createMockBuilderAndOnlyMethods($indicesNamespaceClassName, $indicesNamespaceMockMethods)
             ->getMock();

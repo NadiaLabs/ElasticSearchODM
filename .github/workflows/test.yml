@@ -20,7 +20,7 @@ jobs:
           - php: '7.3'
             composer: 'composer'
           - php: '7.2'
-            composer: 'composer:2.2'
+            composer: 'composer'
           - php: '7.1'
             composer: 'composer:2.2'
           - php: '7.0'
