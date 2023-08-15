@@ -6,6 +6,8 @@ final class ElasticSearchHelper
 {
     private static $clientClassName;
 
+    private static $clientBuilderClassName;
+
     private static $clientClassNameForPHPUnitMockBuilder;
 
     private static $namespaceClassNames = [];
@@ -42,6 +44,24 @@ final class ElasticSearchHelper
         }
 
         return self::$clientClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getClientBuilderClassName()
+    {
+        if (!self::$clientBuilderClassName) {
+            $className = 'Elastic\Elasticsearch\ClientBuilder';
+
+            if (!class_exists($className)) {
+                $className = 'Elasticsearch\ClientBuilder';
+            }
+
+            self::$clientBuilderClassName = $className;
+        }
+
+        return self::$clientBuilderClassName;
     }
 
     /**

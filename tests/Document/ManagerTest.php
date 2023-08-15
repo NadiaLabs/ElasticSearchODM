@@ -166,10 +166,7 @@ class ManagerTest extends TestCase
 
     private function createElasticSearchClientByElasticSearchClientBuilder()
     {
-        $clientBuilderClassName = 'Elastic\Elasticsearch\ClientBuilder';
-        if (!class_exists($clientBuilderClassName)) {
-            $clientBuilderClassName = 'Elasticsearch\ClientBuilder';
-        }
+        $clientBuilderClassName = ElasticSearchHelper::getClientBuilderClassName();
 
         return (new $clientBuilderClassName())->build();
     }

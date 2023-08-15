@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.16
+
+- Add new method to `ElasticSearchHelper` to get `ClientBuilder` class name
+
 ## v0.1.15
 
 - Support PHP 8.0 ~ 8.2
