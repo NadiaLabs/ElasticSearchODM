@@ -3,6 +3,7 @@
 namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataTest extends TestCase
@@ -66,7 +67,7 @@ class ClassMetadataTest extends TestCase
 
     private function getMetadataTestCase()
     {
-        return [
+        $return = [
             'version' => 'v123',
             'className' => 'Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1',
             'indexName' => [
@@ -117,5 +118,11 @@ class ClassMetadataTest extends TestCase
                 ],
             ],
         ];
+
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '>=')) {
+            $return['template']['mappings'] = $return['template']['mappings']['log'];
+        }
+
+        return $return;
     }
 }

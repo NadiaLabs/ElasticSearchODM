@@ -84,11 +84,14 @@ class ManagerTest extends TestCase
             $metadata['template']['template'] = join(',', $metadata['template']['index_patterns']);
             unset($metadata['template']['index_patterns']);
         }
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '>=')) {
+            $metadata['template']['mappings'] = $metadata['template']['mappings']['log'];
+        }
 
         $updateResult = ['acknowledged' => true];
         $updateParams = ['name' => 'testing-template-name', 'body' => $metadata['template']];
-        $client = $this->mockElasticSearchClientForTestUpdateTemplate($updateParams, $updateResult);
 
+        $client = $this->mockElasticSearchClientForTestUpdateTemplate($updateParams, $updateResult);
         $manager = $this->createManager($client);
 
         $result = $manager->updateIndexTemplate(TestDocument1::class);

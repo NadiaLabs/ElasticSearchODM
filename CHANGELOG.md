@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.17
+
+- Add type into template mapping array under Elasticsearch version 7.0.0
+
 ## v0.1.16
 
 - Add new method to `ElasticSearchHelper` to get `ClientBuilder` class name

@@ -8,6 +8,7 @@ use Nadia\ElasticSearchODM\Document\DynamicIndexNameDocument;
 use Nadia\ElasticSearchODM\Document\RoutingEnabledDocument;
 use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
 use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -204,7 +205,11 @@ final class ClassMetadataLoader
             }
         }
 
-        $metadata['template']['mappings'][$metadata['indexTypeName']] = $mappings;
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '<')) {
+            $metadata['template']['mappings'][$metadata['indexTypeName']] = $mappings;
+        } else {
+            $metadata['template']['mappings'] = $mappings;
+        }
     }
 
     private function resolvePropertyMetadata(
@@ -214,10 +219,17 @@ final class ClassMetadataLoader
     ) {
         $propertyName = $reflectionProperty->getName();
 
-        if (!isset($metadata['template']['mappings'][$metadata['indexTypeName']]['properties'])) {
-            $metadata['template']['mappings'][$metadata['indexTypeName']]['properties'] = [];
+        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '<')) {
+            if (!isset($metadata['template']['mappings'][$metadata['indexTypeName']]['properties'])) {
+                $metadata['template']['mappings'][$metadata['indexTypeName']]['properties'] = [];
+            }
+            $properties =& $metadata['template']['mappings'][$metadata['indexTypeName']]['properties'];
+        } else {
+            if (!isset($metadata['template']['mappings']['properties'])) {
+                $metadata['template']['mappings']['properties'] = [];
+            }
+            $properties =& $metadata['template']['mappings']['properties'];
         }
-        $properties =& $metadata['template']['mappings'][$metadata['indexTypeName']]['properties'];
 
         foreach ($propertyAnnotations as $annotation) {
             if ($annotation instanceof ES\Column) {

@@ -5,6 +5,7 @@ namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
 use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
 use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
 use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
+use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
 use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument8;
@@ -107,6 +108,11 @@ class ClassMetadataLoaderTest extends TestCase
         if (file_exists($cacheFilePath)) {
             $cachedMetadata = require $cacheFilePath;
             $expectedCachedMetadata = require __DIR__ . '/../Fixtures/cache/' . $cacheFileName;
+
+            if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '>=')) {
+                $expectedCachedMetadata['template']['mappings'] =
+                    $expectedCachedMetadata['template']['mappings']['log'];
+            }
 
             unset($cachedMetadata['version']);
             unset($expectedCachedMetadata['version']);
