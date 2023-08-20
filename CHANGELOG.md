@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## v0.1.18
+
+- Update GitHub Action scripts
+  - Add actions/setup-node to be compatible with shivammathur/setup-php
+
 ## v0.1.17
 
 - Add type into template mapping array under Elasticsearch version 7.0.0
