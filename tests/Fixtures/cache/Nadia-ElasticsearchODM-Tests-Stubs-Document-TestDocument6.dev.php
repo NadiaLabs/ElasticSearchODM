@@ -1,27 +1,19 @@
 <?php return array (
-  'className' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument2',
+  'className' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument6',
   'indexNamePrefix' => 'dev-',
   'indexName' => 'testing',
   'routing' => null,
   'indexTypeName' => 'log',
-  'repositoryClassName' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
-  'templateName' => 'testing-template-name',
+  'repositoryClassName' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
+  'templateName' => 'template-dev-testing-template-name',
   'template' => 
   array (
     'index_patterns' => ['idx-testing-*'],
     'order' => 0,
-    'settings' => 
-    array (
-      'number_of_shards' => '5',
-    ),
-    'mappings' => 
+    'mappings' =>
     array (
       'log' => 
       array (
-        '_source' => 
-        array (
-          'enabled' => false,
-        ),
         'properties' => 
         array (
           'id' => 
@@ -47,11 +39,11 @@
     'id' => 'id',
     'createdAt' => 'created_at',
   ),
-  'metaColumnsElasticToObject' => 
+  'metaColumnsElasticToObject' =>
   array (
     '_id' => 'docId',
   ),
-  'metaColumnsObjectToElastic' => 
+  'metaColumnsObjectToElastic' =>
   array (
     'docId' => '_id',
   ),

@@ -1,10 +1,10 @@
 <?php return array (
-  'className' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument7',
+  'className' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument7',
   'indexNamePrefix' => 'dev-',
   'indexName' => 'testing',
   'routing' => NULL,
   'indexTypeName' => 'log',
-  'repositoryClassName' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
+  'repositoryClassName' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
   'templateName' => 'template-dev-testing-template-name',
   'template' => 
   array (

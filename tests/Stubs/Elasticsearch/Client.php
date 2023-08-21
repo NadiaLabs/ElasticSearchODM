@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Elasticsearch;
 
 use Elastic\Elasticsearch\ClientInterface;
 use Elastic\Elasticsearch\Endpoints\Indices;

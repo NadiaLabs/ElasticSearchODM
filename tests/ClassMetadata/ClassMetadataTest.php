@@ -1,9 +1,9 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
+namespace Nadia\ElasticsearchODM\Tests\ClassMetadata;
 
-use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticsearchODM\ClassMetadata\ClassMetadata;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataTest extends TestCase
@@ -69,16 +69,16 @@ class ClassMetadataTest extends TestCase
     {
         $return = [
             'version' => 'v123',
-            'className' => 'Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1',
+            'className' => 'Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument1',
             'indexName' => [
-                'Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1',
+                'Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument1',
                 'generateIndexName',
             ],
             'indexNamePrefix' => 'dev-',
             'indexTypeName' => 'log',
-            'repositoryClassName' => 'Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository',
+            'repositoryClassName' => 'Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository',
             'routing' => [
-                'Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1',
+                'Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument1',
                 'generateRoutingName',
             ],
             'metaColumnsElasticToObject' => [
@@ -119,7 +119,7 @@ class ClassMetadataTest extends TestCase
             ],
         ];
 
-        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '>=')) {
+        if (version_compare(ElasticsearchHelper::getClientVersion(), '7.0.0', '>=')) {
             $return['template']['mappings'] = $return['template']['mappings']['log'];
         }
 

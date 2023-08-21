@@ -1,8 +1,8 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Document\Traits;
+namespace Nadia\ElasticsearchODM\Document\Traits;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Annotations as ES;
 
 trait ColumnSource
 {

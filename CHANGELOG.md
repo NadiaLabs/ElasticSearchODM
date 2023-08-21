@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.19
+
+- Change all `ElasticSearch` to `Elasticsearch`
+
 ## v0.1.18
 
 - Update GitHub Action scripts

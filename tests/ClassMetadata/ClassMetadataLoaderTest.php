@@ -1,14 +1,14 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\ClassMetadata;
+namespace Nadia\ElasticsearchODM\Tests\ClassMetadata;
 
-use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
-use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
-use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument3;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument8;
+use Nadia\ElasticsearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticsearchODM\Exception\InvalidAnnotationParameterException;
+use Nadia\ElasticsearchODM\Exception\MissingRequiredAnnotationException;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
+use Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument1;
+use Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument3;
+use Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument8;
 use PHPUnit\Framework\TestCase;
 
 class ClassMetadataLoaderTest extends TestCase
@@ -100,7 +100,7 @@ class ClassMetadataLoaderTest extends TestCase
 
     private function doTestLoad(ClassMetadataLoader $loader, $documentName, $cacheFilePath, $cacheFileName)
     {
-        $documentClassName = '\\Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\' . $documentName;
+        $documentClassName = '\\Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\' . $documentName;
         $metadata = $loader->load($documentClassName);
 
         $this->assertFileExists($cacheFilePath);
@@ -109,7 +109,7 @@ class ClassMetadataLoaderTest extends TestCase
             $cachedMetadata = require $cacheFilePath;
             $expectedCachedMetadata = require __DIR__ . '/../Fixtures/cache/' . $cacheFileName;
 
-            if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '>=')) {
+            if (version_compare(ElasticsearchHelper::getClientVersion(), '7.0.0', '>=')) {
                 $expectedCachedMetadata['template']['mappings'] =
                     $expectedCachedMetadata['template']['mappings']['log'];
             }
@@ -124,7 +124,7 @@ class ClassMetadataLoaderTest extends TestCase
     private function createLoader($documentFileName, $updateCache)
     {
         $cacheDir = $this->getCacheDir();
-        $cacheFileName = 'Nadia-ElasticSearchODM-Tests-Stubs-Document-' . $documentFileName . '.dev.php';
+        $cacheFileName = 'Nadia-ElasticsearchODM-Tests-Stubs-Document-' . $documentFileName . '.dev.php';
         $cacheFilePath = $cacheDir . '/' . $cacheFileName;
 
         return [

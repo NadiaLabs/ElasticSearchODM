@@ -1,8 +1,8 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Helper;
+namespace Nadia\ElasticsearchODM\Helper;
 
-final class ElasticSearchHelper
+final class ElasticsearchHelper
 {
     private static $clientClassName;
 
@@ -73,7 +73,7 @@ final class ElasticSearchHelper
             $className = 'Elasticsearch\Client';
 
             if (!class_exists($className)) {
-                $className = 'Nadia\ElasticSearchODM\Tests\Stubs\ElasticSearch\Client';
+                $className = 'Nadia\ElasticsearchODM\Tests\Stubs\Elasticsearch\Client';
             }
 
             self::$clientClassNameForPHPUnitMockBuilder = $className;

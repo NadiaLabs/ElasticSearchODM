@@ -1,9 +1,9 @@
 {
     "name": "nadialabs/elasticsearch-odm",
-    "description": "An Object Document Mapper (ODM) library for ElasticSearch",
+    "description": "An Object Document Mapper (ODM) library for Elasticsearch",
     "type": "library",
     "license": "MIT",
-    "keywords": ["ElasticSearch", "Elastic", "ELK"],
+    "keywords": ["Elasticsearch", "Elastic", "ELK"],
     "authors": [
         {
             "name": "LeoOnTheEarth",
@@ -23,12 +23,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Nadia\\ElasticSearchODM\\": "src/"
+            "Nadia\\ElasticsearchODM\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Nadia\\ElasticSearchODM\\Tests\\": "tests/"
+            "Nadia\\ElasticsearchODM\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }

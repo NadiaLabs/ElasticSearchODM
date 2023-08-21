@@ -1,15 +1,15 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Document;
+namespace Nadia\ElasticsearchODM\Tests\Document;
 
-use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
-use Nadia\ElasticSearchODM\Document\IndexNameProvider;
-use Nadia\ElasticSearchODM\Document\Manager;
-use Nadia\ElasticSearchODM\Exception\InvalidOrderByOrientationException;
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
-use Nadia\ElasticSearchODM\Tests\PHPUnit\Framework\TestCase;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
-use Nadia\ElasticSearchODM\Tests\Stubs\Document\TestDocument1;
+use Nadia\ElasticsearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticsearchODM\Document\IndexNameProvider;
+use Nadia\ElasticsearchODM\Document\Manager;
+use Nadia\ElasticsearchODM\Exception\InvalidOrderByOrientationException;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
+use Nadia\ElasticsearchODM\Tests\PHPUnit\Framework\TestCase;
+use Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository;
+use Nadia\ElasticsearchODM\Tests\Stubs\Document\TestDocument1;
 use Psr\Cache\InvalidArgumentException;
 
 class RepositoryTest extends TestCase
@@ -213,7 +213,7 @@ class RepositoryTest extends TestCase
         $limit
     ) {
         $client = $this
-            ->createMockBuilderAndOnlyMethods(ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['search'])
+            ->createMockBuilderAndOnlyMethods(ElasticsearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['search'])
             ->getMock();
         $indexNameProvider = $this
             ->createMockBuilderAndOnlyMethods(IndexNameProvider::class, ['getValidIndexNames'])
@@ -260,7 +260,7 @@ class RepositoryTest extends TestCase
             'result' => 'created',
         ];
         $client = $this
-            ->createMockBuilderAndOnlyMethods(ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['index'])
+            ->createMockBuilderAndOnlyMethods(ElasticsearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['index'])
             ->getMock();
 
         $client->method('index')->willReturn($indexResult);
@@ -315,7 +315,7 @@ class RepositoryTest extends TestCase
         ];
 
         $client = $this
-            ->createMockBuilderAndOnlyMethods(ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['bulk'])
+            ->createMockBuilderAndOnlyMethods(ElasticsearchHelper::getClientClassNameForPHPUnitMockBuilder(), ['bulk'])
             ->getMock();
 
         $client->method('bulk')->willReturn([]);
@@ -335,7 +335,7 @@ class RepositoryTest extends TestCase
      */
     public function testBulkWriteWithEmptyDocuments()
     {
-        $client = $this->getMockBuilder(ElasticSearchHelper::getClientClassNameForPHPUnitMockBuilder())
+        $client = $this->getMockBuilder(ElasticsearchHelper::getClientClassNameForPHPUnitMockBuilder())
             ->disableOriginalConstructor()
             ->getMock();
 

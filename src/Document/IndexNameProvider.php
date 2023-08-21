@@ -1,14 +1,14 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Document;
+namespace Nadia\ElasticsearchODM\Document;
 
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 class IndexNameProvider
 {
     /**
-     * @var \Elastic\ElasticSearch\Client|\ElasticSearch\Client
+     * @var \Elastic\Elasticsearch\Client|\Elasticsearch\Client
      */
     protected $client;
 
@@ -40,7 +40,7 @@ class IndexNameProvider
     /**
      * IndexNameProvider constructor.
      *
-     * @param \Elastic\ElasticSearch\Client|\ElasticSearch\Client $client
+     * @param \Elastic\Elasticsearch\Client|\Elasticsearch\Client $client
      * @param string $indexNamePrefix
      * @param CacheItemPoolInterface|null $cache
      */

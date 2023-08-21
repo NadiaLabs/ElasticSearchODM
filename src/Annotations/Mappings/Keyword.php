@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Annotations\Mappings;
+namespace Nadia\ElasticsearchODM\Annotations\Mappings;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 

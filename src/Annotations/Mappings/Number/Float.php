@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Annotations\Mappings\Number;
+namespace Nadia\ElasticsearchODM\Annotations\Mappings\Number;
 
 /**
  * @Annotation

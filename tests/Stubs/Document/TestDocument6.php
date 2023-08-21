@@ -1,9 +1,9 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
+use Nadia\ElasticsearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnId;
 
 /**
  * A normal document class for testing template name.
@@ -11,7 +11,7 @@ use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
  * @ES\Document(
  *     index_name="testing",
  *     index_type_name="log",
- *     repository_class_name="Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
+ *     repository_class_name="Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
  * )
  * @ES\Template(
  *     name="template-%s-testing-template-name",

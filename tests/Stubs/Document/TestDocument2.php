@@ -1,10 +1,10 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnSource;
+use Nadia\ElasticsearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnId;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnSource;
 
 /**
  * A document class with a fixed index name and without a routing generating method.
@@ -12,7 +12,7 @@ use Nadia\ElasticSearchODM\Document\Traits\ColumnSource;
  * @ES\Document(
  *     index_name="testing",
  *     index_type_name="log",
- *     repository_class_name="Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
+ *     repository_class_name="Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
  * )
  * @ES\Template(
  *     name="testing-template-name",

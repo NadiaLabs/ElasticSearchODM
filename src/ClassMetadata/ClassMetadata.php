@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\ClassMetadata;
+namespace Nadia\ElasticsearchODM\ClassMetadata;
 
 class ClassMetadata
 {

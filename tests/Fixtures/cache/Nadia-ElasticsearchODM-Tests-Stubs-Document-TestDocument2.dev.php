@@ -1,18 +1,10 @@
 <?php return array (
-  'className' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument1',
+  'className' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument2',
   'indexNamePrefix' => 'dev-',
-  'indexName' => 
-  array (
-    0 => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument1',
-    1 => 'generateIndexName',
-  ),
-  'routing' => 
-  array (
-    0 => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument1',
-    1 => 'generateRoutingName',
-  ),
+  'indexName' => 'testing',
+  'routing' => null,
   'indexTypeName' => 'log',
-  'repositoryClassName' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
+  'repositoryClassName' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
   'templateName' => 'testing-template-name',
   'template' => 
   array (

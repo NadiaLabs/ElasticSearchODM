@@ -1,14 +1,14 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\ClassMetadata;
+namespace Nadia\ElasticsearchODM\ClassMetadata;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Nadia\ElasticSearchODM\Annotations as ES;
-use Nadia\ElasticSearchODM\Document\DynamicIndexNameDocument;
-use Nadia\ElasticSearchODM\Document\RoutingEnabledDocument;
-use Nadia\ElasticSearchODM\Exception\InvalidAnnotationParameterException;
-use Nadia\ElasticSearchODM\Exception\MissingRequiredAnnotationException;
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticsearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Document\DynamicIndexNameDocument;
+use Nadia\ElasticsearchODM\Document\RoutingEnabledDocument;
+use Nadia\ElasticsearchODM\Exception\InvalidAnnotationParameterException;
+use Nadia\ElasticsearchODM\Exception\MissingRequiredAnnotationException;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -205,7 +205,7 @@ final class ClassMetadataLoader
             }
         }
 
-        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '<')) {
+        if (version_compare(ElasticsearchHelper::getClientVersion(), '7.0.0', '<')) {
             $metadata['template']['mappings'][$metadata['indexTypeName']] = $mappings;
         } else {
             $metadata['template']['mappings'] = $mappings;
@@ -219,7 +219,7 @@ final class ClassMetadataLoader
     ) {
         $propertyName = $reflectionProperty->getName();
 
-        if (version_compare(ElasticSearchHelper::getClientVersion(), '7.0.0', '<')) {
+        if (version_compare(ElasticsearchHelper::getClientVersion(), '7.0.0', '<')) {
             if (!isset($metadata['template']['mappings'][$metadata['indexTypeName']]['properties'])) {
                 $metadata['template']['mappings'][$metadata['indexTypeName']]['properties'] = [];
             }

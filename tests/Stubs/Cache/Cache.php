@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Cache;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Cache;
 
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;

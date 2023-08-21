@@ -1,7 +1,7 @@
-ElasticSearch ODM
+Elasticsearch ODM
 =================
 
-A simple ODM library for ElasticSearch.
+A simple ODM library for Elasticsearch.
 
 ## Installation
 

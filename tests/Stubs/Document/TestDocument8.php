@@ -1,8 +1,8 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Annotations as ES;
 
 /**
  * A normal document class for testing object mapping with invalid property parameters.
@@ -12,7 +12,7 @@ use Nadia\ElasticSearchODM\Annotations as ES;
  * @ES\Document(
  *     index_name="testing",
  *     index_type_name="log",
- *     repository_class_name="Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
+ *     repository_class_name="Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
  * )
  * @ES\Template(
  *     name="template-%s-testing-template-name",

@@ -1,10 +1,10 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnSource;
+use Nadia\ElasticsearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnId;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnSource;
 
 /**
  * An invalid document class without "ES\Document" annotation.

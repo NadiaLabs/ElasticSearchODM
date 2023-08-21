@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository;
 
 class InvalidRepository
 {

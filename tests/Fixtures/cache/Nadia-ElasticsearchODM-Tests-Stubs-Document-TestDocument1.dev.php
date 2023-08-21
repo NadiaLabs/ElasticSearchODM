@@ -1,19 +1,35 @@
 <?php return array (
-  'className' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\TestDocument6',
+  'className' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument1',
   'indexNamePrefix' => 'dev-',
-  'indexName' => 'testing',
-  'routing' => null,
+  'indexName' => 
+  array (
+    0 => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument1',
+    1 => 'generateIndexName',
+  ),
+  'routing' => 
+  array (
+    0 => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\TestDocument1',
+    1 => 'generateRoutingName',
+  ),
   'indexTypeName' => 'log',
-  'repositoryClassName' => 'Nadia\\ElasticSearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
-  'templateName' => 'template-dev-testing-template-name',
+  'repositoryClassName' => 'Nadia\\ElasticsearchODM\\Tests\\Stubs\\Document\\Repository\\TestDocumentRepository',
+  'templateName' => 'testing-template-name',
   'template' => 
   array (
     'index_patterns' => ['idx-testing-*'],
     'order' => 0,
-    'mappings' =>
+    'settings' => 
+    array (
+      'number_of_shards' => '5',
+    ),
+    'mappings' => 
     array (
       'log' => 
       array (
+        '_source' => 
+        array (
+          'enabled' => false,
+        ),
         'properties' => 
         array (
           'id' => 
@@ -39,11 +55,11 @@
     'id' => 'id',
     'createdAt' => 'created_at',
   ),
-  'metaColumnsElasticToObject' =>
+  'metaColumnsElasticToObject' => 
   array (
     '_id' => 'docId',
   ),
-  'metaColumnsObjectToElastic' =>
+  'metaColumnsObjectToElastic' => 
   array (
     'docId' => '_id',
   ),

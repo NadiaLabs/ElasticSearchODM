@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Exception;
+namespace Nadia\ElasticsearchODM\Exception;
 
 class InvalidOrderByOrientationException extends \InvalidArgumentException
 {

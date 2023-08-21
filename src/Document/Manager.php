@@ -1,18 +1,18 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Document;
+namespace Nadia\ElasticsearchODM\Document;
 
-use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadata;
-use Nadia\ElasticSearchODM\ClassMetadata\ClassMetadataLoader;
-use Nadia\ElasticSearchODM\Exception\RepositoryInheritanceInvalidException;
-use Nadia\ElasticSearchODM\Exception\RepositoryNotExistsException;
-use Nadia\ElasticSearchODM\Helper\ElasticSearchHelper;
+use Nadia\ElasticsearchODM\ClassMetadata\ClassMetadata;
+use Nadia\ElasticsearchODM\ClassMetadata\ClassMetadataLoader;
+use Nadia\ElasticsearchODM\Exception\RepositoryInheritanceInvalidException;
+use Nadia\ElasticsearchODM\Exception\RepositoryNotExistsException;
+use Nadia\ElasticsearchODM\Helper\ElasticsearchHelper;
 use Psr\Cache\CacheItemPoolInterface;
 
 class Manager
 {
     /**
-     * @var \Elastic\ElasticSearch\Client|\ElasticSearch\Client
+     * @var \Elastic\Elasticsearch\Client|\Elasticsearch\Client
      */
     protected $client;
 
@@ -39,7 +39,7 @@ class Manager
     /**
      * Manager constructor.
      *
-     * @param \Elastic\ElasticSearch\Client|\ElasticSearch\Client $client
+     * @param \Elastic\Elasticsearch\Client|\Elasticsearch\Client $client
      * @param ClassMetadataLoader $classMetadataLoader
      * @param IndexNameProvider $indexNameProvider
      * @param CacheItemPoolInterface|null $cache
@@ -100,7 +100,7 @@ class Manager
         foreach ($template['index_patterns'] as &$indexPattern) {
             $indexPattern = $metadata->indexNamePrefix . $indexPattern;
         }
-        if (version_compare(ElasticSearchHelper::getClientVersion(), '6.0.0', '<')) {
+        if (version_compare(ElasticsearchHelper::getClientVersion(), '6.0.0', '<')) {
             $template['template'] = join(',', $template['index_patterns']);
             unset($template['index_patterns']);
         }
@@ -110,7 +110,7 @@ class Manager
             'body' => $template,
         ];
 
-        return ElasticSearchHelper::convertResponseToArray($this->getClient()->indices()->putTemplate($params));
+        return ElasticsearchHelper::convertResponseToArray($this->getClient()->indices()->putTemplate($params));
     }
 
     /**
@@ -126,7 +126,7 @@ class Manager
     }
 
     /**
-     * @return \Elastic\ElasticSearch\Client|\ElasticSearch\Client
+     * @return \Elastic\Elasticsearch\Client|\Elasticsearch\Client
      */
     public function getClient()
     {

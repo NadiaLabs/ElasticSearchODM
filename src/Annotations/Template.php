@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Annotations;
+namespace Nadia\ElasticsearchODM\Annotations;
 
 /**
  * @Annotation
@@ -16,7 +16,7 @@ final class Template
     public $index_patterns = [];
 
     /**
-     * @var \Nadia\ElasticSearchODM\Annotations\TemplateSettings[]
+     * @var \Nadia\ElasticsearchODM\Annotations\TemplateSettings[]
      *   Array key is environment name (prod, dev, ...etc), "prod" is the default environment name.
      *   Array value is the TemplateSettings annotation.
      *   For example:

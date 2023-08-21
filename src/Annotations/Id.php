@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Annotations;
+namespace Nadia\ElasticsearchODM\Annotations;
 
 /**
  * Mapping for document's "_id" column

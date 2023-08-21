@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Annotations\MappingMetaFields;
+namespace Nadia\ElasticsearchODM\Annotations\MappingMetaFields;
 
 /**
  * @Annotation

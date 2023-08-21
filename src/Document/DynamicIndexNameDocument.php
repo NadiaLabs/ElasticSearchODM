@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Document;
+namespace Nadia\ElasticsearchODM\Document;
 
 interface DynamicIndexNameDocument
 {

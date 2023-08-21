@@ -1,19 +1,19 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document;
 
-use Nadia\ElasticSearchODM\Annotations as ES;
-use Nadia\ElasticSearchODM\Document\DynamicIndexNameDocument;
-use Nadia\ElasticSearchODM\Document\RoutingEnabledDocument;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnId;
-use Nadia\ElasticSearchODM\Document\Traits\ColumnSource;
+use Nadia\ElasticsearchODM\Annotations as ES;
+use Nadia\ElasticsearchODM\Document\DynamicIndexNameDocument;
+use Nadia\ElasticsearchODM\Document\RoutingEnabledDocument;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnId;
+use Nadia\ElasticsearchODM\Document\Traits\ColumnSource;
 
 /**
  * A normal document class with general usages.
  *
  * @ES\Document(
  *     index_type_name="log",
- *     repository_class_name="Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
+ *     repository_class_name="Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository\TestDocumentRepository",
  * )
  * @ES\Template(
  *     name="testing-template-name",

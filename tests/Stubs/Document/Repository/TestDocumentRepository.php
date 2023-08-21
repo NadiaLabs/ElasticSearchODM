@@ -1,8 +1,8 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\Stubs\Document\Repository;
+namespace Nadia\ElasticsearchODM\Tests\Stubs\Document\Repository;
 
-use Nadia\ElasticSearchODM\Document\Repository;
+use Nadia\ElasticsearchODM\Document\Repository;
 
 class TestDocumentRepository extends Repository
 {

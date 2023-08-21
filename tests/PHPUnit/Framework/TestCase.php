@@ -1,6 +1,6 @@
 <?php
 
-namespace Nadia\ElasticSearchODM\Tests\PHPUnit\Framework;
+namespace Nadia\ElasticsearchODM\Tests\PHPUnit\Framework;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
