@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.20
+
+- Add method to enable/disable in memory caches
+
 ## v0.1.19
 
 - Change all `ElasticSearch` to `Elasticsearch`

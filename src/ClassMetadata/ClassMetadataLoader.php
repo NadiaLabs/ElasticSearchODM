@@ -40,6 +40,11 @@ final class ClassMetadataLoader
     private $loaded = [];
 
     /**
+     * @var bool Enable caches that store in $loaded property.
+     */
+    private $enableInMemoryCache = true;
+
+    /**
      * ClassMetadataLoader constructor.
      *
      * @param string $cachePath
@@ -59,7 +64,7 @@ final class ClassMetadataLoader
     {
         $className = ltrim($className, '\\ ');
 
-        if (isset($this->loaded[$className])) {
+        if ($this->enableInMemoryCache && isset($this->loaded[$className])) {
             return $this->loaded[$className];
         }
 
@@ -121,6 +126,26 @@ final class ClassMetadataLoader
     public function disableUpdateCache()
     {
         $this->updateCache = false;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function enableInMemoryCache()
+    {
+        $this->enableInMemoryCache = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableInMemoryCache()
+    {
+        $this->enableInMemoryCache = false;
 
         return $this;
     }
