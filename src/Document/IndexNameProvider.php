@@ -105,7 +105,7 @@ class IndexNameProvider
             }
 
             if (!empty($alias['aliases']) && is_array($alias['aliases'])) {
-                foreach ($alias['aliases'] as $aliasIndexName) {
+                foreach (array_keys($alias['aliases']) as $aliasIndexName) {
                     if ($this->isValidIndexName($aliasIndexName)) {
                         $this->aliases[$aliasIndexName] = true;
                     }

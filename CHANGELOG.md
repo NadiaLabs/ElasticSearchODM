@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+## v0.1.21
+
+- Fix type error while loading index aliases
+
 ## v0.1.20
 
 - Add method to enable/disable in memory caches
